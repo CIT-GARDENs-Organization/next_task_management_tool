@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardContent,
@@ -6,21 +7,34 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {useEffect, useState} from "react";
 
 export default function Home() {
+  const [currentTime, setCurrentTime] = useState({
+    utc: new Date().toLocaleString("ja-JP", {timeZone: "UTC"}),
+    jtc: new Date().toLocaleString("ja-JP", {timeZone: "Asia/Tokyo"}),
+  });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime({
+        utc: new Date().toLocaleString("ja-JP", {timeZone: "UTC"}),
+        jtc: new Date().toLocaleString("ja-JP", {timeZone: "Asia/Tokyo"}),
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <main className="bg-neutral-50w-full p-12 grid grid-cols-1 sm:md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <Card className="md:col-span-2 w-full">
-        <CardHeader>
-          <CardTitle>Card Title 1</CardTitle>
-          <CardDescription>Card Description 1</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>Card Content 1</p>
+      <Card className="w-full">
+        <CardContent className="flex items-center justify-center h-full">
+          <div className="text-2xl font-bold text-center">
+            <p>UTC: {currentTime.utc}</p>
+            <p>JTC: {currentTime.jtc}</p>
+          </div>
         </CardContent>
-        <CardFooter>
-          <p>Card Footer 1</p>
-        </CardFooter>
       </Card>
       <Card className="w-full">
         <CardHeader>
