@@ -35,7 +35,9 @@ export default function RootLayout({
           <Settings size={24} className="mb-8" />
         </aside>
 
-        <main className="flex-1">{children}</main>
+        <main className="bg-neutral-50 ml-14 flex-1 h-screen overflow-auto">
+          {children}
+        </main>
       </body>
     </html>
   );
