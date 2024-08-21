@@ -2,7 +2,7 @@ import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import "./globals.css";
 import Image from "next/image";
-import {Settings, Home, Users2, LineChart} from "lucide-react";
+import {Settings, Home, Users2, LineChart, Clock} from "lucide-react";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -30,6 +30,7 @@ export default function RootLayout({
           <Home size={24} className="mt-8" />
           <LineChart size={24} className="mt-6" />
           <Users2 size={24} className="mt-6" />
+          <Clock size={24} className="mt-6" />
           <div className="flex-grow" />
           <Settings size={24} className="mb-8" />
         </aside>
