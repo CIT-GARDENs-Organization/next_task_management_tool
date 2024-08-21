@@ -2,7 +2,9 @@ import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import "./globals.css";
 import Image from "next/image";
+import Link from "next/link";
 import {Settings, Home, Users2, LineChart, Clock} from "lucide-react";
+import RecoilProvider from "@/app/recoilProvider";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -32,11 +34,13 @@ export default function RootLayout({
           <Users2 size={24} className="mt-6" />
           <Clock size={24} className="mt-6" />
           <div className="flex-grow" />
-          <Settings size={24} className="mb-8" />
+          <Link href="settings">
+            <Settings size={24} className="mb-8 hover:text-neutral-500" />
+          </Link>
         </aside>
 
         <main className="bg-neutral-50 ml-14 flex-1 h-screen overflow-auto">
-          {children}
+          <RecoilProvider>{children}</RecoilProvider>
         </main>
       </body>
     </html>
