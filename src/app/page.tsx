@@ -11,17 +11,28 @@ import {useEffect, useState} from "react";
 
 export default function Home() {
   const [currentTime, setCurrentTime] = useState({
-    utc: new Date().toLocaleString("ja-JP", {timeZone: "UTC"}),
-    jtc: new Date().toLocaleString("ja-JP", {timeZone: "Asia/Tokyo"}),
+    utc: "",
+    jtc: "",
   });
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime({
-        utc: new Date().toLocaleString("ja-JP", {timeZone: "UTC"}),
-        jtc: new Date().toLocaleString("ja-JP", {timeZone: "Asia/Tokyo"}),
-      });
-    }, 1000);
+    const fetchServerTime = async () => {
+      try {
+        const response = await fetch("/api/time");
+        const data = await response.json();
+        setCurrentTime({
+          utc: new Date(data.utc).toLocaleString("ja-JP", {timeZone: "UTC"}),
+          jtc: new Date(data.jtc).toLocaleString("ja-JP", {
+            timeZone: "Asia/Tokyo",
+          }),
+        });
+      } catch (error) {
+        console.error("Error fetching server time:", error);
+      }
+    };
+
+    fetchServerTime();
+    const interval = setInterval(fetchServerTime, 1000);
 
     return () => clearInterval(interval);
   }, []);
