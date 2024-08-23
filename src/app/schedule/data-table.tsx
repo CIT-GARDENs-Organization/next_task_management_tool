@@ -85,7 +85,7 @@ export function DataTable<TData, TValue>({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              表示列変更
+              Columns
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

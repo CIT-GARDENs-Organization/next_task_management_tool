@@ -3,14 +3,7 @@
 import {ColumnDef} from "@tanstack/react-table";
 import {ArrowUpDown, MoreHorizontal} from "lucide-react";
 
-export type Payment = {
-  id: string;
-  pass_id: string;
-  satellite: string;
-  start_time: string;
-  manager: string;
-  sub_manager: string;
-};
+import {Database} from "@/types/supabase";
 
 import {Button} from "@/components/ui/button";
 import {Checkbox} from "@/components/ui/checkbox";
@@ -24,7 +17,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<
+  Database["public"]["Tables"]["pass_schedule"]["Row"]
+>[] = [
   {
     id: "select",
     header: ({table}) => (
@@ -55,10 +50,10 @@ export const columns: ColumnDef<Payment>[] = [
     ),
   },
   {
-    accessorKey: "satellite",
+    accessorKey: "satellite_name",
     header: "Satellite",
     cell: ({row}) => (
-      <div className="capitalize">{row.getValue("satellite")}</div>
+      <div className="capitalize">{row.getValue("satellite_name")}</div>
     ),
   },
   {
@@ -79,24 +74,10 @@ export const columns: ColumnDef<Payment>[] = [
     ),
   },
   {
-    accessorKey: "manager",
-    header: "Manager",
-    cell: ({row}) => (
-      <div className="capitalize">{row.getValue("manager")}</div>
-    ),
-  },
-  {
-    accessorKey: "sub_manager",
-    header: "SubManager",
-    cell: ({row}) => (
-      <div className="capitalize">{row.getValue("sub_manager")}</div>
-    ),
-  },
-  {
     id: "actions",
     enableHiding: false,
     cell: ({row}) => {
-      const payment = row.original;
+      const pass = row.original;
 
       return (
         <DropdownMenu>
@@ -107,15 +88,8 @@ export const columns: ColumnDef<Payment>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy Pass ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Update</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem>変更する</DropdownMenuItem>
+            <DropdownMenuItem>削除</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

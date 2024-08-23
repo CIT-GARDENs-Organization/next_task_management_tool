@@ -1,3 +1,4 @@
+"use client";
 import useSWR from "swr";
 import {createClient} from "@supabase/supabase-js";
 import {
@@ -8,48 +9,33 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import {Payment, columns} from "./columns";
+import {Database} from "@/types/supabase";
+import {columns} from "./columns";
 import {DataTable} from "./data-table";
 
-async function getData(): Promise<Payment[]> {
-  return [
-    {
-      id: "m5gr84i9",
-      pass_id: "SKR-1",
-      satellite: "SAKURA",
-      start_time: "2022-01-01T00:00:00Z",
-      manager: "太郎",
-      sub_manager: "次郎",
-    },
-    {
-      id: "m5gr84i9",
-      pass_id: "SKR-2",
-      satellite: "SAKURA",
-      start_time: "2022-01-01T00:00:00Z",
-      manager: "太郎",
-      sub_manager: "次郎",
-    },
-    {
-      id: "m5gr84i9",
-      pass_id: "SKR-3",
-      satellite: "SAKURA",
-      start_time: "2022-01-01T00:00:00Z",
-      manager: "太郎",
-      sub_manager: "次郎",
-    },
-    {
-      id: "m5gr84i9",
-      pass_id: "YMG-1",
-      satellite: "YOMOGI",
-      start_time: "2022-01-01T00:00:00Z",
-      manager: "太郎",
-      sub_manager: "次郎",
-    },
-  ];
-}
+// Supabaseクライアントのセットアップ
+const supabase = createClient<Database>(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
-export default async function Schedule() {
-  const data = await getData();
+// データフェッチ用の関数
+const fetcher = async () => {
+  const {data, error} = await supabase.from("pass_schedule").select("*");
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  console.log(data);
+
+  return data;
+};
+
+export default function Schedule() {
+  const {data, error} = useSWR("pass_schedule", fetcher);
+
+  if (error) return <div>Error loading data...</div>;
+  if (!data) return <div>Loading...</div>;
 
   return (
     <main className="bg-neutral-50 w-full p-12 grid grid-cols-1 gap-8">
