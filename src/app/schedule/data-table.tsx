@@ -33,6 +33,8 @@ import {
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 
+import AddPassScheduleButton from "@/components/AddPassScheduleButton";
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -108,7 +110,7 @@ export function DataTable<TData, TValue>({
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-        <Button>追加</Button>
+        <AddPassScheduleButton />
       </div>
       <div className="rounded-md border">
         <Table>
