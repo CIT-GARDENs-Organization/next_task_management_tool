@@ -41,6 +41,20 @@ supabase db pull
 supabase migration up
 ```
 
+## Edge Functions
+
+新規Functionの作成
+
+```bash
+supabase functions new new-name-function
+```
+
+Functionのデプロイ
+
+```bash
+supabase functions deploy new-name-function
+```
+
 ### Supabase型定義ファイルの更新
 
 ```bash
