@@ -34,6 +34,13 @@
 
 `/supabase`フォルダ下には、SupabaseのEdgeFunctionのコードや、migrationファイルが置かれています．
 
+### remoteの変更のpull
+
+```bash
+supabase db pull
+supabase migration up
+```
+
 ### Supabase型定義ファイルの更新
 
 ```bash
