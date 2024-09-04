@@ -93,6 +93,7 @@ curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/tle-updat
     "table": "tle",
     "record": {
       "id": 265,
+      "satellite_id": "9c72f588-2894-407c-b19f-7357412f8e75",
       "name": "SAKURA",
       "content": "OBJECT WU               \r\n1 60954U 98067WU  24247.60248306  .00115501  00000+0  19272-2 0  9997\r\n2 60954  51.6391 286.8206 0013428 314.7580  45.2651 15.50985581   818\r\n",
       "norad_id": 60954,
