@@ -3,235 +3,247 @@ export type Json =
   | number
   | boolean
   | null
-  | {[key: string]: Json | undefined}
-  | Json[];
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
   graphql_public: {
     Tables: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Views: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Functions: {
       graphql: {
         Args: {
-          operationName?: string;
-          query?: string;
-          variables?: Json;
-          extensions?: Json;
-        };
-        Returns: Json;
-      };
-    };
+          operationName?: string
+          query?: string
+          variables?: Json
+          extensions?: Json
+        }
+        Returns: Json
+      }
+    }
     Enums: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       notes: {
         Row: {
-          id: number;
-          title: string;
-        };
+          id: number
+          title: string
+        }
         Insert: {
-          id?: never;
-          title: string;
-        };
+          id?: never
+          title: string
+        }
         Update: {
-          id?: never;
-          title?: string;
-        };
-        Relationships: [];
-      };
+          id?: never
+          title?: string
+        }
+        Relationships: []
+      }
       pass_schedule: {
         Row: {
-          created_at: string;
-          end_time: string | null;
-          id: string;
-          pass_id: number | null;
-          satellite_name: string | null;
-          start_time: string | null;
-        };
+          created_at: string
+          end_time: string | null
+          id: string
+          pass_id: number | null
+          satellite_name: string | null
+          start_time: string | null
+        }
         Insert: {
-          created_at?: string;
-          end_time?: string | null;
-          id?: string;
-          pass_id?: number | null;
-          satellite_name?: string | null;
-          start_time?: string | null;
-        };
+          created_at?: string
+          end_time?: string | null
+          id?: string
+          pass_id?: number | null
+          satellite_name?: string | null
+          start_time?: string | null
+        }
         Update: {
-          created_at?: string;
-          end_time?: string | null;
-          id?: string;
-          pass_id?: number | null;
-          satellite_name?: string | null;
-          start_time?: string | null;
-        };
+          created_at?: string
+          end_time?: string | null
+          id?: string
+          pass_id?: number | null
+          satellite_name?: string | null
+          start_time?: string | null
+        }
         Relationships: [
           {
-            foreignKeyName: "pass_schedule_satellite_name_fkey";
-            columns: ["satellite_name"];
-            isOneToOne: false;
-            referencedRelation: "satellite_list";
-            referencedColumns: ["name"];
-          }
-        ];
-      };
+            foreignKeyName: "pass_schedule_satellite_name_fkey"
+            columns: ["satellite_name"]
+            isOneToOne: false
+            referencedRelation: "satellite_list"
+            referencedColumns: ["name"]
+          },
+        ]
+      }
       satellite_list: {
         Row: {
-          created_at: string;
-          id: string;
-          last_updated: string | null;
-          name: string;
-          norad_id: number | null;
-          status: string | null;
-          tle_fetch_on: boolean | null;
-        };
+          created_at: string
+          id: string
+          last_updated: string | null
+          name: string
+          norad_id: number | null
+          status: string | null
+          tle_fetch_on: boolean | null
+        }
         Insert: {
-          created_at?: string;
-          id?: string;
-          last_updated?: string | null;
-          name: string;
-          norad_id?: number | null;
-          status?: string | null;
-          tle_fetch_on?: boolean | null;
-        };
+          created_at?: string
+          id?: string
+          last_updated?: string | null
+          name: string
+          norad_id?: number | null
+          status?: string | null
+          tle_fetch_on?: boolean | null
+        }
         Update: {
-          created_at?: string;
-          id?: string;
-          last_updated?: string | null;
-          name?: string;
-          norad_id?: number | null;
-          status?: string | null;
-          tle_fetch_on?: boolean | null;
-        };
-        Relationships: [];
-      };
+          created_at?: string
+          id?: string
+          last_updated?: string | null
+          name?: string
+          norad_id?: number | null
+          status?: string | null
+          tle_fetch_on?: boolean | null
+        }
+        Relationships: []
+      }
       tle: {
         Row: {
-          content: string | null;
-          created_at: string;
-          id: number;
-          name: string | null;
-          norad_id: number | null;
-        };
+          content: string | null
+          created_at: string
+          id: number
+          name: string | null
+          norad_id: number | null
+          satellite_id: string | null
+        }
         Insert: {
-          content?: string | null;
-          created_at?: string;
-          id?: number;
-          name?: string | null;
-          norad_id?: number | null;
-        };
+          content?: string | null
+          created_at?: string
+          id?: number
+          name?: string | null
+          norad_id?: number | null
+          satellite_id?: string | null
+        }
         Update: {
-          content?: string | null;
-          created_at?: string;
-          id?: number;
-          name?: string | null;
-          norad_id?: number | null;
-        };
-        Relationships: [];
-      };
-    };
+          content?: string | null
+          created_at?: string
+          id?: number
+          name?: string | null
+          norad_id?: number | null
+          satellite_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tle_satellite_id_fkey"
+            columns: ["satellite_id"]
+            isOneToOne: false
+            referencedRelation: "satellite_list"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+    }
     Views: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Functions: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Enums: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
-};
+      [_ in never]: never
+    }
+  }
+}
 
-type PublicSchema = Database[Extract<keyof Database, "public">];
+type PublicSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
   PublicTableNameOrOptions extends
     | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
-    | {schema: keyof Database},
-  TableName extends PublicTableNameOrOptions extends {schema: keyof Database}
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
         Database[PublicTableNameOrOptions["schema"]]["Views"])
-    : never = never
-> = PublicTableNameOrOptions extends {schema: keyof Database}
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
       Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R;
+      Row: infer R
     }
     ? R
     : never
   : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
-      PublicSchema["Views"])
-  ? (PublicSchema["Tables"] &
-      PublicSchema["Views"])[PublicTableNameOrOptions] extends {
-      Row: infer R;
-    }
-    ? R
+        PublicSchema["Views"])
+    ? (PublicSchema["Tables"] &
+        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
     : never
-  : never;
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
     | keyof PublicSchema["Tables"]
-    | {schema: keyof Database},
-  TableName extends PublicTableNameOrOptions extends {schema: keyof Database}
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never
-> = PublicTableNameOrOptions extends {schema: keyof Database}
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I;
+      Insert: infer I
     }
     ? I
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-  ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-      Insert: infer I;
-    }
-    ? I
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
     : never
-  : never;
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
     | keyof PublicSchema["Tables"]
-    | {schema: keyof Database},
-  TableName extends PublicTableNameOrOptions extends {schema: keyof Database}
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never
-> = PublicTableNameOrOptions extends {schema: keyof Database}
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U;
+      Update: infer U
     }
     ? U
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-  ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-      Update: infer U;
-    }
-    ? U
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
     : never
-  : never;
 
 export type Enums<
   PublicEnumNameOrOptions extends
     | keyof PublicSchema["Enums"]
-    | {schema: keyof Database},
-  EnumName extends PublicEnumNameOrOptions extends {schema: keyof Database}
+    | { schema: keyof Database },
+  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
-    : never = never
-> = PublicEnumNameOrOptions extends {schema: keyof Database}
+    : never = never,
+> = PublicEnumNameOrOptions extends { schema: keyof Database }
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
-  ? PublicSchema["Enums"][PublicEnumNameOrOptions]
-  : never;
+    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
