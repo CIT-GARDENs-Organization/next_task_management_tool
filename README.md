@@ -33,3 +33,9 @@
 ## Supabase（バックエンド）
 
 `/supabase`フォルダ下には、SupabaseのEdgeFunctionのコードや、migrationファイルが置かれています．
+
+### Supabase型定義ファイルの更新
+
+```bash
+supabase gen types typescript --local > ../src/types/supabase.ts
+```
