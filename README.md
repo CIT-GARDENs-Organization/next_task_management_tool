@@ -2,20 +2,20 @@
 
 ## 概要
 
-衛星運用にあたって必要な運用計画を立てるためのWebアプリケーションです．
+衛星運用にあたって必要な運用計画を立てるためのWebアプリケーションである．
 
 ## フロントエンド開発環境 起動方法
 
-このプロジェクトはNext.jsで作成されています．
-次の手順に従い、ローカル開発用サーバーを起動できます．
+このプロジェクトはNext.jsで作成されている．
+次の手順に従い、ローカル開発用サーバーを起動できる．
 
 1. 環境変数ファイルの作成
 
-    `.env.example`を参考に、ルート直下に`.env.local`ファイルを作成します．
+    `.env.example`を参考に、ルート直下に`.env.local`ファイルを作成
 
 2. 環境変数の入力
 
-    管理者に`<SUBSTITUTE_SUPABASE_URL>`と`<SUBSTITUTE_SUPABASE_ANON_KEY>`を問い合わせ、該当箇所を置き換えて保存します．
+    管理者に`<SUBSTITUTE_SUPABASE_URL>`と`<SUBSTITUTE_SUPABASE_ANON_KEY>`を問い合わせ、該当箇所を置き換えて保存
 
     ```bash
     NEXT_PUBLIC_SUPABASE_URL=<SUBSTITUTE_SUPABASE_URL>
@@ -23,7 +23,7 @@
     ```
 
 3. 開発用サーバーの起動
-    Next.jsの開発用サーバーを起動します．
+    Next.jsの開発用サーバーを起動
 
     ```bash
     npm i
@@ -32,7 +32,7 @@
 
 ## Supabase（バックエンド）操作方法
 
-`/supabase`フォルダ下には、SupabaseのEdgeFunctionのコードや、migrationファイルが置かれています．
+`/supabase`フォルダ下には、SupabaseのEdgeFunctionのコードや、migrationファイルが置かれている．
 
 ### remoteの変更のpull
 
@@ -74,7 +74,7 @@ PostgreSQLの[`pg_cron`](https://supabase.com/docs/guides/database/extensions/pg
 
 ### tle-update-webhook
 
-`tle-fetch`関数が`tle`テーブルにTLEを保存したとき、そのinsertをトリガとしたWebhookでよびだされる．
+`tle-fetch`関数が`tle`テーブルにTLEを保存したとき、そのinsertをトリガとしたWebhookで呼び出される．
 
 #### ローカルでのテスト方法
 
