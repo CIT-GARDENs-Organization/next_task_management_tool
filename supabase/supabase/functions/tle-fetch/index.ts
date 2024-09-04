@@ -86,6 +86,7 @@ Deno.serve(async (req) => {
               norad_id: satellite.norad_id,
               name: satellite.name,
               content: responseText,
+              satellite_id: satellite.id,
             },
           ]);
 
