@@ -30,7 +30,7 @@
     npm run dev
     ```
 
-## Supabase（バックエンド）
+## Supabase（バックエンド）操作方法
 
 `/supabase`フォルダ下には、SupabaseのEdgeFunctionのコードや、migrationファイルが置かれています．
 
@@ -46,3 +46,14 @@ supabase migration up
 ```bash
 supabase gen types typescript --local > ../src/types/supabase.ts
 ```
+
+## Supabase Edge Functions
+
+`/supabase/supabase/functions/`下にあるSupabase Edge Functionについて述べる．
+[Edge Function](https://supabase.com/docs/guides/functions)は、Supabase側で実行できる関数のことであり、クライアントの操作がなくても、任意のトリガを用いて計算を実行し、その結果をDBに保存したり他の動作に使用できる仕組みである．
+
+### tle-fetch
+
+Supabase上の`satellite_list`テーブルに登録された衛星で、`tle_fetch_on`要素が`TRUE`になっている衛星のTLE（2行軌道要素）を[NORAD](https://celestrak.org/)からスクレイピングし、`tle`テーブルに保存する．
+
+PostgreSQLの[`pg_cron`](https://supabase.com/docs/guides/database/extensions/pg_cron?queryGroups=database-method&database-method=sql)拡張を利用したジョブスケジューリングで、3時間に1回定期実行される
