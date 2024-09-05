@@ -1,4 +1,5 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import {createClient} from "jsr:@supabase/supabase-js@2";
 
 type ParsedTLE = {
   line1: {
@@ -128,24 +129,64 @@ Deno.serve(async (req) => {
       };
 
       try {
-        // TLEをパースして出力
+        // Supabaseクライアントを作成
+        const supabase = createClient(
+          Deno.env.get("SUPABASE_URL") ?? "",
+          Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+          {
+            global: {
+              headers: {Authorization: req.headers.get("Authorization")!},
+            },
+          }
+        );
+
         const tleInfo = parseTLE(tle);
-        console.log("Line 1 Parsed:");
-        console.log(tleInfo.line1);
-        console.log("Line 2 Parsed:");
-        console.log(tleInfo.line2);
+        const {error} = await supabase.from("parsed_tle").insert([
+          {
+            id: record.id,
+            satellite_id: record.satellite_id,
+            name: record.name,
+            classification: tleInfo.line1.classification,
+            launch_year: tleInfo.line1.launchYear,
+            launch_number: tleInfo.line1.launchNumber,
+            launch_piece: tleInfo.line1.launchPiece,
+            epoch_year: tleInfo.line1.epochYear,
+            epoch_day: tleInfo.line1.epochDay,
+            mean_motion_first_derivative:
+              tleInfo.line1.meanMotionFirstDerivative,
+            b_star_drag_term: tleInfo.line1.bStarDragTerm,
+            ephemeris_type: tleInfo.line1.ephemerisType,
+            element_set_number: tleInfo.line1.elementSetNumber,
+            inclination: tleInfo.line2.inclination,
+            right_ascension: tleInfo.line2.rightAscension,
+            eccentricity: tleInfo.line2.eccentricity,
+            perigee_argument: tleInfo.line2.perigeeArgument,
+            mean_anomaly: tleInfo.line2.meanAnomaly,
+            mean_motion: tleInfo.line2.meanMotion,
+            revolution_number: tleInfo.line2.revolutionNumber,
+          },
+        ]);
+
+        if (error) {
+          console.error(`Error inserting parsed TLE: ${error.message}`);
+          return new Response(JSON.stringify({error: error.message}), {
+            status: 400,
+          });
+        }
+
+        return new Response("TLE data parsed and saved successfully", {
+          status: 200,
+        });
       } catch (error) {
         console.error(`Error parsing TLE: ${error.message}`);
-        return new Response(`Error: ${error.message}`, {status: 400});
+        return new Response(`Error parsing TLE: ${error.message}`, {
+          status: 400,
+        });
       }
     } else {
-      console.error("TLE data is not in expected format.");
       return new Response("TLE data is not in expected format.", {status: 400});
     }
   } else {
-    console.error("TLE content is undefined or missing.");
     return new Response("TLE content is undefined or missing.", {status: 400});
   }
-
-  return new Response("OK");
 });
