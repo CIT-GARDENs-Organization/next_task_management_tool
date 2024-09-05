@@ -92,12 +92,12 @@ curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/tle-updat
     "type": "INSERT",
     "table": "tle",
     "record": {
-      "id": 265,
-      "satellite_id": "9c72f588-2894-407c-b19f-7357412f8e75",
-      "name": "SAKURA",
-      "content": "OBJECT WU               \r\n1 60954U 98067WU  24247.60248306  .00115501  00000+0  19272-2 0  9997\r\n2 60954  51.6391 286.8206 0013428 314.7580  45.2651 15.50985581   818\r\n",
-      "norad_id": 60954,
-      "created_at": "2024-09-04T21:00:07.351294+00:00"
+      "id": 270,
+      "name": "ISS (ZARYA)",
+      "content": "ISS (ZARYA)             \r\n1 25544U 98067A   24248.59872094  .00055672  00000+0  99550-3 0  9999\r\n2 25544  51.6408 281.9414 0011614 320.5791 177.4306 15.49387191470866\r\n",
+      "norad_id": 25544,
+      "created_at": "2024-09-05T06:00:07.802001+00:00",
+      "satellite_id": "bbef64c4-14a8-415d-9f51-d2f897172d76"
     },
     "schema": "public",
     "old_record": null
