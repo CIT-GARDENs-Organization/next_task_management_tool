@@ -13,7 +13,7 @@ type ParsedTLE = {
     meanMotionFirstDerivative: string; // +IIIIIIII (平均運動の1次の時間微分)
     meanMotionSecondDerivative: string; // +JJJJJ-J (平均運動の2次の時間微分)
     bStarDragTerm: string; // +KKKKK-K 大気抵抗係数項
-    ephemerisType: number; // L 軌道モデルの種別
+    ephemerisType: number; // L 軌道モデルの種別 0: 情報なし, 1: SGP, 2: SGP4, 3: SDP4, 4: SGP8, 5: SDP8
     elementSetNumber: string; // MMMM 軌道要素通番
     checksum: number; // N チェックサム
   };
