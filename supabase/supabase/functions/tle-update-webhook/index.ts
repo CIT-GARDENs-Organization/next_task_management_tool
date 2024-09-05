@@ -2,32 +2,32 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 type ParsedTLE = {
   line1: {
-    lineNumber: number; // 1
-    satelliteCatalogNumber: string; // B
-    classification: "S" | "U"; // C
-    launchYear: string; // DD
-    launchNumber: string; // EEE
-    launchPiece: string; // FFF
-    epochYear: string; // GG
-    epochDay: string; // HHH.HHHHHHHH
-    meanMotionFirstDerivative: string; // +IIIIIIII
-    meanMotionSecondDerivative: string; // +JJJJJ-J
-    bStarDragTerm: string; // +KKKKK-K
-    ephemerisType: number; // L
-    elementSetNumber: string; // MMMM
-    checksum: number; // N
+    lineNumber: number; // 1 要素データ行番号
+    satelliteCatalogNumber: string; // B 衛星カタログ番号
+    classification: "S" | "U"; // C 軍事機密種別
+    launchYear: string; // DD 国際衛星識別符号
+    launchNumber: string; // EEE 国際衛星識別符号
+    launchPiece: string; // FFF 国際衛星識別符号
+    epochYear: string; // GG 元期(西暦の下2桁)
+    epochDay: string; // HHH.HHHHHHHH 元期（年通算日.その日の00時からの経過時間)
+    meanMotionFirstDerivative: string; // +IIIIIIII (平均運動の1次の時間微分)
+    meanMotionSecondDerivative: string; // +JJJJJ-J (平均運動の2次の時間微分)
+    bStarDragTerm: string; // +KKKKK-K 大気抵抗係数項
+    ephemerisType: number; // L 軌道モデルの種別
+    elementSetNumber: string; // MMMM 軌道要素通番
+    checksum: number; // N チェックサム
   };
   line2: {
-    lineNumber: number; // 2
-    satelliteCatalogNumber: string; // B
-    inclination: number; // PPP.PPPP
-    rightAscension: number; // QQQ.QQQQ
-    eccentricity: number; // RRRRRRR
-    perigeeArgument: number; // SSS.SSSS
-    meanAnomaly: number; // TTT.TTTT
-    meanMotion: number; // UU.UUUUUUUU
-    revolutionNumber: string; // VVVVV
-    checksum: number; // W
+    lineNumber: number; // 2 要素データ行番号
+    satelliteCatalogNumber: string; // B 衛星カタログ番号
+    inclination: number; // PPP.PPPP 軌道傾斜角[度]
+    rightAscension: number; // QQQ.QQQQ 昇交点の赤経[度]
+    eccentricity: number; // RRRRRRR 離心率
+    perigeeArgument: number; // SSS.SSSS 近地点引数[度]
+    meanAnomaly: number; // TTT.TTTT 平均近点角[度]
+    meanMotion: number; // UU.UUUUUUUU 平均運動[回転/day]
+    revolutionNumber: string; // VVVVV 通算周回数
+    checksum: number; // W チェックサム
   };
 };
 
