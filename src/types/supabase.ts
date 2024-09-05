@@ -208,6 +208,63 @@ export type Database = {
         }
         Relationships: []
       }
+      satellite_schedule: {
+        Row: {
+          azimuth_end: number | null
+          azimuth_start: number | null
+          created_at: string
+          id: string
+          max_elevation: number | null
+          name: string | null
+          pass_end_time: string | null
+          pass_start_time: string | null
+          satellite_id: string | null
+          tle_updated_at: string | null
+          updates_count: number | null
+        }
+        Insert: {
+          azimuth_end?: number | null
+          azimuth_start?: number | null
+          created_at?: string
+          id?: string
+          max_elevation?: number | null
+          name?: string | null
+          pass_end_time?: string | null
+          pass_start_time?: string | null
+          satellite_id?: string | null
+          tle_updated_at?: string | null
+          updates_count?: number | null
+        }
+        Update: {
+          azimuth_end?: number | null
+          azimuth_start?: number | null
+          created_at?: string
+          id?: string
+          max_elevation?: number | null
+          name?: string | null
+          pass_end_time?: string | null
+          pass_start_time?: string | null
+          satellite_id?: string | null
+          tle_updated_at?: string | null
+          updates_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "satellite_schedule_name_fkey"
+            columns: ["name"]
+            isOneToOne: false
+            referencedRelation: "satellite_list"
+            referencedColumns: ["name"]
+          },
+          {
+            foreignKeyName: "satellite_schedule_satellite_id_fkey"
+            columns: ["satellite_id"]
+            isOneToOne: false
+            referencedRelation: "satellite_list"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tle: {
         Row: {
           content: string | null
