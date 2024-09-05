@@ -49,6 +49,100 @@ export type Database = {
         }
         Relationships: []
       }
+      parsed_tle: {
+        Row: {
+          b_star_drag_term: number | null
+          classification: string | null
+          created_at: string
+          eccentricity: number | null
+          element_set_number: number | null
+          ephemeris_type: number | null
+          epoch_day: number | null
+          epoch_year: number | null
+          id: number
+          inclination: number | null
+          launch_number: number | null
+          launch_piece: string | null
+          launch_year: number | null
+          mean_anomaly: number | null
+          mean_motion: number | null
+          mean_motion_first_derivative: number | null
+          name: string | null
+          perigee_argument: number | null
+          revolution_number: number | null
+          right_ascension: number | null
+          satellite_id: string | null
+        }
+        Insert: {
+          b_star_drag_term?: number | null
+          classification?: string | null
+          created_at?: string
+          eccentricity?: number | null
+          element_set_number?: number | null
+          ephemeris_type?: number | null
+          epoch_day?: number | null
+          epoch_year?: number | null
+          id?: number
+          inclination?: number | null
+          launch_number?: number | null
+          launch_piece?: string | null
+          launch_year?: number | null
+          mean_anomaly?: number | null
+          mean_motion?: number | null
+          mean_motion_first_derivative?: number | null
+          name?: string | null
+          perigee_argument?: number | null
+          revolution_number?: number | null
+          right_ascension?: number | null
+          satellite_id?: string | null
+        }
+        Update: {
+          b_star_drag_term?: number | null
+          classification?: string | null
+          created_at?: string
+          eccentricity?: number | null
+          element_set_number?: number | null
+          ephemeris_type?: number | null
+          epoch_day?: number | null
+          epoch_year?: number | null
+          id?: number
+          inclination?: number | null
+          launch_number?: number | null
+          launch_piece?: string | null
+          launch_year?: number | null
+          mean_anomaly?: number | null
+          mean_motion?: number | null
+          mean_motion_first_derivative?: number | null
+          name?: string | null
+          perigee_argument?: number | null
+          revolution_number?: number | null
+          right_ascension?: number | null
+          satellite_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "parsed_tle_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "tle"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "parsed_tle_name_fkey"
+            columns: ["name"]
+            isOneToOne: false
+            referencedRelation: "satellite_list"
+            referencedColumns: ["name"]
+          },
+          {
+            foreignKeyName: "parsed_tle_satellite_id_fkey"
+            columns: ["satellite_id"]
+            isOneToOne: false
+            referencedRelation: "satellite_list"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pass_schedule: {
         Row: {
           created_at: string
