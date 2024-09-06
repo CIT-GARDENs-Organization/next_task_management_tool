@@ -81,7 +81,7 @@ PostgreSQLの[`pg_cron`](https://supabase.com/docs/guides/database/extensions/pg
 ```bash
 supabase start
 supabase status
-supabase functions serve
+supabase functions serve --env-file supabase/.env
 ```
 
 ```bash
@@ -106,4 +106,10 @@ curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/tle-updat
 
 ```bash
 supabase stop
+```
+
+#### 環境変数のremoteへの登録
+
+```bash
+supabase secrets set --env-file supabase/.env
 ```
