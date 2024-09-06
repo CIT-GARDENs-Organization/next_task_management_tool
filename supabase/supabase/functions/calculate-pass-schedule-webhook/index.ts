@@ -16,8 +16,34 @@ function degreesToRadians(degrees: number): number {
   return degrees * (Math.PI / 180);
 }
 
+// GeoNames APIを呼び出し国名を取得
+async function fetchCountryFromGeoNames(
+  lat: number,
+  lon: number
+): Promise<string | null> {
+  const username = Deno.env.get("GEONAMES_USERNAME"); // GeoNames APIのユーザー名
+  const url = `http://api.geonames.org/countryCodeJSON?lat=${lat}&lng=${lon}&username=${username}`;
+
+  try {
+    const response = await fetch(url);
+    if (response.ok) {
+      const data = await response.json();
+
+      return data.countryName || null;
+    } else {
+      console.error(
+        `Error fetching country from GeoNames: ${response.statusText}`
+      );
+      return null;
+    }
+  } catch (error) {
+    console.error(`Fetch error: ${error.message}`);
+    return null;
+  }
+}
+
 // 衛星の通過スケジュールを計算する関数
-function calculatePassSchedule(
+async function calculatePassScheduleWithCountries(
   tle: {line1: string; line2: string},
   groundStationLocation: {lat: number; lon: number}
 ) {
@@ -29,16 +55,17 @@ function calculatePassSchedule(
     height: 0,
   };
 
-  const startTime = new Date(); // 計算開始時間
-  const endTime = new Date(startTime.getTime() + 14 * 24 * 60 * 60 * 1000); // 2週間後の時間
+  const startTime = new Date();
+  const endTime = new Date(startTime.getTime() + 14 * 24 * 60 * 60 * 1000); // 1日後
 
   const passes = [];
-
   let time = startTime;
   let isPassActive = false;
   let currentPassStartTime = null;
   let maxElevation = 0;
   let startAzimuth = null;
+  const countries = new Set<string>();
+  const countryFetchPromises = [];
 
   while (time <= endTime) {
     const positionAndVelocity = propagate(satrec, time);
@@ -51,51 +78,70 @@ function calculatePassSchedule(
       const gmst = gstime(time);
       const positionGd = eciToGeodetic(positionEci, gmst);
 
-      // GeodeticLocationをECF座標に変換
       const positionEcf = geodeticToEcf(positionGd);
-
       const azEl = ecfToLookAngles(groundStation, positionEcf);
 
       const elevation = radiansToDegrees(azEl.elevation);
       const azimuth = radiansToDegrees(azEl.azimuth);
 
+      // 必ず日本をリストに追加
+      countries.add("Japan");
+
+      // 仰角が0度を超える場合は可視
       if (elevation > 0) {
-        // 衛星が地上局の可視範囲に入った場合
         if (!isPassActive) {
-          // パスが始まった場合、開始時刻と開始方位角を記録
           isPassActive = true;
           currentPassStartTime = time;
           startAzimuth = azimuth;
-          maxElevation = elevation; // 初期仰角を設定
+          maxElevation = elevation;
         } else {
-          // パス中、最大仰角を更新
           if (elevation > maxElevation) {
             maxElevation = elevation;
           }
         }
       } else if (isPassActive) {
-        // 衛星が可視範囲から出た場合
+        // 衛星が不可視になった場合の処理
         isPassActive = false;
+
+        // 並列処理された国情報の取得を待つ
+        await Promise.all(countryFetchPromises);
+
         passes.push({
           pass_start_time: currentPassStartTime,
-          pass_end_time: time, // 現在の時刻を終了時刻とする
+          pass_end_time: time,
           max_elevation: maxElevation,
           azimuth_start: startAzimuth,
-          azimuth_end: azimuth, // 終了時の方位角を記録
+          azimuth_end: azimuth,
+          countries: Array.from(countries),
         });
-        currentPassStartTime = null;
-        maxElevation = 0;
-        startAzimuth = null;
+        countries.clear();
+        countries.add("Japan"); // 次のパスのために日本をリセット
+        countryFetchPromises.length = 0;
       }
 
-      // 仰角が-20度以下の場合は5分間隔、それ以外は1秒間隔に設定
+      // 仰角が-20度以下の場合、5分間隔でAPI呼び出し
       if (elevation <= -20) {
-        time = new Date(time.getTime() + 5 * 60 * 1000); // 5分ごと
+        const fetchCountryPromise = fetchCountryFromGeoNames(
+          radiansToDegrees(positionGd.latitude),
+          radiansToDegrees(positionGd.longitude)
+        ).then((country) => {
+          if (country) {
+            countries.add(country);
+          }
+        });
+
+        // API呼び出しをPromiseに追加して並列処理
+        countryFetchPromises.push(fetchCountryPromise);
+
+        time = new Date(time.getTime() + 5 * 60 * 1000); // 5分ごとに時間を進める
       } else {
-        time = new Date(time.getTime() + 1000); // 1秒ごと
+        time = new Date(time.getTime() + 1000); // 1秒ごとに時間を進める
       }
     }
   }
+
+  // 最後のパス処理を行う際に残っている非同期タスクを待つ
+  await Promise.all(countryFetchPromises);
 
   return passes;
 }
@@ -167,7 +213,7 @@ Deno.serve(async (req) => {
           };
 
           // TLEを解析し、衛星の通過スケジュールを計算
-          const passSchedules = calculatePassSchedule(
+          const passSchedules = await calculatePassScheduleWithCountries(
             tle,
             groundStationLocation
           );
@@ -220,6 +266,7 @@ Deno.serve(async (req) => {
                     max_elevation: newSchedule.max_elevation,
                     azimuth_start: newSchedule.azimuth_start,
                     azimuth_end: newSchedule.azimuth_end,
+                    country: newSchedule.countries,
                     tle_updated_at: tleUpdatedAt
                       ? tleUpdatedAt.toISOString()
                       : null, // null チェックを追加
@@ -251,6 +298,7 @@ Deno.serve(async (req) => {
                     max_elevation: newSchedule.max_elevation,
                     azimuth_start: newSchedule.azimuth_start,
                     azimuth_end: newSchedule.azimuth_end,
+                    country: newSchedule.countries,
                     tle_updated_at: tleUpdatedAt
                       ? tleUpdatedAt.toISOString()
                       : null, // null チェックを追加
