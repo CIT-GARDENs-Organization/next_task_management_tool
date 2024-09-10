@@ -15,7 +15,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {supabase} from "@/utils/supabase/supabaseClientSideClient";
+import {createClient} from "@/utils/supabase/client";
+
+const supabase = createClient();
 
 // データフェッチ用の関数
 const fetcher = async () => {

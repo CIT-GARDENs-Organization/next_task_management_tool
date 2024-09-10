@@ -13,7 +13,13 @@ import {useSession} from "@/providers/sessionProvider";
 export default function Dashboard() {
   const {session, loading} = useSession();
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!session || !session.user) {
+    return <p>No user session found. Please sign in.</p>;
+  }
 
   return (
     <main className="bg-neutral-50w-full p-12 grid grid-cols-1 sm:md:grid-cols-2 lg:grid-cols-3 gap-8">

@@ -5,7 +5,7 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {useState} from "react";
 import {useRouter} from "next/navigation";
-import {supabase} from "@/utils/supabase/supabaseClientSideClient";
+import {signIn} from "@/lib/signIn";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -17,15 +17,17 @@ export default function Login() {
     e.preventDefault();
     setError(null);
 
-    const {error} = await supabase.auth.signInWithPassword({
-      email: username,
-      password: password,
-    });
+    // フォームデータの作成
+    const formData = new FormData();
+    formData.append("email", username);
+    formData.append("password", password);
 
-    if (error) {
-      setError(error.message);
+    const result = await signIn(formData);
+
+    if (!result.supabase?.success) {
+      setError(result.supabase?.message || "ログインに失敗しました。");
     } else {
-      router.push("/dashboard");
+      router.push("/dashboard"); // ログイン成功後にダッシュボードにリダイレクト
     }
   };
 

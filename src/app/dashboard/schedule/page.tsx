@@ -10,7 +10,9 @@ import {
 
 import {columns} from "./columns";
 import {DataTable} from "./data-table";
-import {supabase} from "@/utils/supabase/supabaseClientSideClient";
+import {createClient} from "@/utils/supabase/client";
+
+const supabase = createClient();
 
 // データフェッチ用の関数
 const fetcher = async () => {

@@ -1,6 +1,6 @@
 "use client";
 import {createContext, useContext, useEffect, useState, ReactNode} from "react";
-import {supabase} from "@/utils/supabase/supabaseClientSideClient";
+import {createClient} from "@/utils/supabase/client";
 
 interface SessionContextProps {
   session: any;
@@ -22,6 +22,8 @@ export const useSession = () => {
 export const SessionProvider = ({children}: {children: ReactNode}) => {
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchSession = async () => {

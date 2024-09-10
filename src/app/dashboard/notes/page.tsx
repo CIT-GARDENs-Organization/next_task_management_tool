@@ -1,4 +1,6 @@
-import {supabase} from "@/utils/supabase/supabaseServerSideClient";
+import {createClient} from "@/utils/supabase/server";
+
+const supabase = createClient();
 
 export default async function Notes() {
   const {data: notes} = await supabase.from("notes").select();
