@@ -12,6 +12,7 @@ import {
   SquareChartGantt,
 } from "lucide-react";
 import RecoilProvider from "@/providers/recoilProvider";
+import {SessionProvider} from "@/providers/sessionProvider";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -54,7 +55,9 @@ export default function RootLayout({
         </aside>
 
         <main className="bg-neutral-50 ml-14 flex-1 h-screen overflow-auto">
-          <RecoilProvider>{children}</RecoilProvider>
+          <SessionProvider>
+            <RecoilProvider>{children}</RecoilProvider>
+          </SessionProvider>
         </main>
       </body>
     </html>

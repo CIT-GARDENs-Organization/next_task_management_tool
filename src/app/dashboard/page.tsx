@@ -8,43 +8,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {useEffect, useState} from "react";
+import {useSession} from "@/providers/sessionProvider";
 
 export default function Dashboard() {
-  const [currentTime, setCurrentTime] = useState({
-    utc: "",
-    jtc: "",
-  });
+  const {session, loading} = useSession();
 
-  useEffect(() => {
-    const fetchServerTime = async () => {
-      try {
-        const response = await fetch("/api/time");
-        const data = await response.json();
-        setCurrentTime({
-          utc: new Date(data.utc).toLocaleString("ja-JP", {timeZone: "UTC"}),
-          jtc: new Date(data.jtc).toLocaleString("ja-JP", {
-            timeZone: "Asia/Tokyo",
-          }),
-        });
-      } catch (error) {
-        console.error("Error fetching server time:", error);
-      }
-    };
-
-    fetchServerTime();
-    const interval = setInterval(fetchServerTime, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
+  if (loading) return <p>Loading...</p>;
 
   return (
     <main className="bg-neutral-50w-full p-12 grid grid-cols-1 sm:md:grid-cols-2 lg:grid-cols-3 gap-8">
       <Card className="w-full">
         <CardContent className="flex items-center justify-center h-full">
-          <div className="text-2xl font-bold text-center">
-            <p>UTC: {currentTime.utc}</p>
-            <p>JTC: {currentTime.jtc}</p>
-          </div>
+          <h1>Welcome to your dashboard, {session.user.email}!</h1>
         </CardContent>
       </Card>
       <Card className="w-full">
