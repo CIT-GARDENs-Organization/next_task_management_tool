@@ -12,6 +12,7 @@ export interface SignInResponse {
   supabase?: {
     success: boolean;
     message?: string;
+    session?: any;
   };
 }
 
@@ -21,7 +22,10 @@ export async function signIn(formData: FormData): Promise<SignInResponse> {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  const {error} = await supabase.auth.signInWithPassword({email, password});
+  const {data, error} = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
   if (error) {
     return {
@@ -32,10 +36,13 @@ export async function signIn(formData: FormData): Promise<SignInResponse> {
     };
   }
 
+  const session = data.session;
+
   return {
     supabase: {
       success: true,
       message: "ログインに成功しました。",
+      session,
     },
   };
 }

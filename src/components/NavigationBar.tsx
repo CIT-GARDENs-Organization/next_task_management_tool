@@ -20,7 +20,7 @@ export default function NavigationBar({
 }: {
   setNavWidth: (width: string) => void;
 }) {
-  const {session} = useSession();
+  const {session, setSession} = useSession();
   const [isWide, setIsWide] = useState(false);
   const router = useRouter();
 
@@ -47,6 +47,7 @@ export default function NavigationBar({
   const handleLogout = async () => {
     const {error} = await supabase.auth.signOut();
     if (!error) {
+      setSession(null);
       router.push("/");
     } else {
       console.error("Logout error:", error);

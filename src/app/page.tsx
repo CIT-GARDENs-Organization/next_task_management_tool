@@ -6,11 +6,13 @@ import {Button} from "@/components/ui/button";
 import {useState} from "react";
 import {useRouter} from "next/navigation";
 import {signIn} from "@/lib/signIn";
+import {useSession} from "@/providers/sessionProvider";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const {setSession} = useSession(); // セッションを更新できるように修正
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -27,7 +29,11 @@ export default function Login() {
     if (!result.supabase?.success) {
       setError(result.supabase?.message || "ログインに失敗しました。");
     } else {
-      router.push("/dashboard"); // ログイン成功後にダッシュボードにリダイレクト
+      // ログイン成功後にセッションを更新
+      const sessionData = result.supabase?.session;
+      setSession(sessionData); // セッションを更新
+
+      router.push("/dashboard"); // ダッシュボードにリダイレクト
     }
   };
 
