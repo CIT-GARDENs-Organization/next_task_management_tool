@@ -1,6 +1,5 @@
 "use client";
 import useSWR from "swr";
-import {createClient} from "@supabase/supabase-js";
 import {
   Card,
   CardContent,
@@ -16,13 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {Database} from "@/types/supabase";
-
-// Supabaseクライアントのセットアップ
-const supabase = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import {supabase} from "@/utils/supabase/supabaseClientSideClient";
 
 // データフェッチ用の関数
 const fetcher = async () => {
