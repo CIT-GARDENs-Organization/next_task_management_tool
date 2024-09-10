@@ -11,7 +11,7 @@ import {
   Clock,
   SquareChartGantt,
 } from "lucide-react";
-import RecoilProvider from "@/app/recoilProvider";
+import RecoilProvider from "@/providers/recoilProvider";
 
 const inter = Inter({subsets: ["latin"]});
 
