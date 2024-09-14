@@ -67,6 +67,7 @@ export type Database = {
           mean_anomaly: number | null
           mean_motion: number | null
           mean_motion_first_derivative: number | null
+          mean_motion_second_derivative: number | null
           name: string | null
           perigee_argument: number | null
           revolution_number: number | null
@@ -90,6 +91,7 @@ export type Database = {
           mean_anomaly?: number | null
           mean_motion?: number | null
           mean_motion_first_derivative?: number | null
+          mean_motion_second_derivative?: number | null
           name?: string | null
           perigee_argument?: number | null
           revolution_number?: number | null
@@ -113,6 +115,7 @@ export type Database = {
           mean_anomaly?: number | null
           mean_motion?: number | null
           mean_motion_first_derivative?: number | null
+          mean_motion_second_derivative?: number | null
           name?: string | null
           perigee_argument?: number | null
           revolution_number?: number | null
@@ -212,6 +215,7 @@ export type Database = {
         Row: {
           azimuth_end: number | null
           azimuth_start: number | null
+          country: Json | null
           created_at: string
           id: string
           max_elevation: number | null
@@ -225,6 +229,7 @@ export type Database = {
         Insert: {
           azimuth_end?: number | null
           azimuth_start?: number | null
+          country?: Json | null
           created_at?: string
           id?: string
           max_elevation?: number | null
@@ -238,6 +243,7 @@ export type Database = {
         Update: {
           azimuth_end?: number | null
           azimuth_start?: number | null
+          country?: Json | null
           created_at?: string
           id?: string
           max_elevation?: number | null
