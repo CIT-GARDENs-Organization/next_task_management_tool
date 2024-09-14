@@ -26,7 +26,17 @@ const Radar: React.FC<RadarProps> = ({
   const endY = centerY - radius * Math.sin(endAngle);
 
   const elevationRadius = ((90 - maxElevation) / 90) * radius;
-  const controlAngle = (startAngle + endAngle) / 2;
+
+  let controlAngle;
+  if (Math.abs(endAngle - startAngle) <= Math.PI) {
+    controlAngle = (startAngle + endAngle) / 2;
+  } else {
+    controlAngle = (startAngle + endAngle + 2 * Math.PI) / 2;
+    if (controlAngle > 2 * Math.PI) {
+      controlAngle -= 2 * Math.PI;
+    }
+  }
+
   const controlX = centerX + elevationRadius * Math.cos(controlAngle);
   const controlY = centerY - elevationRadius * Math.sin(controlAngle);
 
