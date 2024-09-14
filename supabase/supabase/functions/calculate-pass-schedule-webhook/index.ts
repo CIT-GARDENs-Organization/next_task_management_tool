@@ -271,6 +271,7 @@ Deno.serve(async (req) => {
                       ? tleUpdatedAt.toISOString()
                       : null, // null チェックを追加
                     updates_count: (scheduleToUpdate.updates_count || 0) + 1, // 更新回数を1増やす
+                    tle_id: record.id,
                   })
                   .eq("id", scheduleToUpdate.id);
 
@@ -303,6 +304,7 @@ Deno.serve(async (req) => {
                       ? tleUpdatedAt.toISOString()
                       : null, // null チェックを追加
                     updates_count: 0, // 新規作成時は0
+                    tle_id: record.id,
                   });
 
                 if (insertError) {
