@@ -4,7 +4,11 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet";
-import Radar from "./Radar"; // Adjust the import path if necessary
+import Radar from "./Radar";
+import useSWR from "swr";
+
+import {createClient} from "@/utils/supabase/client";
+const supabase = createClient();
 
 interface RowSheetContentProps {
   row: any;
@@ -13,6 +17,16 @@ interface RowSheetContentProps {
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   return date.toLocaleString();
+};
+
+const fetcher = async (url: string) => {
+  console.log(url);
+  const {data, error} = await supabase.from("tle").select("*").eq("id", url);
+  console.log(data);
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
 };
 
 export function RowSheetContent({row}: RowSheetContentProps) {
@@ -25,6 +39,10 @@ export function RowSheetContent({row}: RowSheetContentProps) {
   const countryList = row.original.country.join(", ");
   const updatesCount = row.original.updates_count;
   const tleUpdatedAt = formatDate(row.original.tle_updated_at);
+
+  // tle_idを使用してtleテーブルから該当のtleデータを取得する
+  const tleId = row.original.tle_id;
+  const {data, error} = useSWR(tleId, fetcher);
 
   return (
     <SheetContent className="w-[400px] sm:w-2/3 sm:max-w-screen-lg">
