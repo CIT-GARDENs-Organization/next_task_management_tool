@@ -23,6 +23,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import ShadcnTableRowWithSheet from "@/components/ShadcnTableRowWithSheet";
+
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -33,18 +35,17 @@ import {
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 
-import AddPassScheduleButton from "@/components/AddPassScheduleButton";
-import {useEffect} from "react";
+import {Database} from "@/types/supabase";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+export function DataTable<
+  TData extends Database["public"]["Tables"]["satellite_schedule"]["Row"],
+  TValue
+>({columns, data}: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([
     {
       id: "pass_start_time",
@@ -57,6 +58,15 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  // dataのうち、pass_start_timeが未来のデータのみを表示
+  const today = new Date();
+  data = data.filter((row) => {
+    const passStartTime = row.pass_start_time
+      ? new Date(row.pass_start_time)
+      : new Date(0);
+    return passStartTime >= today;
+  });
 
   const table = useReactTable({
     data,
@@ -142,33 +152,11 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
+          {/* データ表示部に行データを受け渡し */}
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
+            {table.getRowModel().rows.map((row) => (
+              <ShadcnTableRowWithSheet key={row.id} row={row} />
+            ))}
           </TableBody>
         </Table>
       </div>
