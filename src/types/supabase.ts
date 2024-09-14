@@ -223,6 +223,7 @@ export type Database = {
           pass_end_time: string | null
           pass_start_time: string | null
           satellite_id: string | null
+          tle_id: number | null
           tle_updated_at: string | null
           updates_count: number | null
         }
@@ -237,6 +238,7 @@ export type Database = {
           pass_end_time?: string | null
           pass_start_time?: string | null
           satellite_id?: string | null
+          tle_id?: number | null
           tle_updated_at?: string | null
           updates_count?: number | null
         }
@@ -251,6 +253,7 @@ export type Database = {
           pass_end_time?: string | null
           pass_start_time?: string | null
           satellite_id?: string | null
+          tle_id?: number | null
           tle_updated_at?: string | null
           updates_count?: number | null
         }
@@ -267,6 +270,13 @@ export type Database = {
             columns: ["satellite_id"]
             isOneToOne: false
             referencedRelation: "satellite_list"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "satellite_schedule_tle_id_fkey"
+            columns: ["tle_id"]
+            isOneToOne: false
+            referencedRelation: "tle"
             referencedColumns: ["id"]
           },
         ]
