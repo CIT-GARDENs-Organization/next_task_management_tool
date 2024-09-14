@@ -59,15 +59,6 @@ export function DataTable<
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  // dataのうち、pass_start_timeが未来のデータのみを表示
-  const today = new Date();
-  data = data.filter((row) => {
-    const passStartTime = row.pass_start_time
-      ? new Date(row.pass_start_time)
-      : new Date(0);
-    return passStartTime >= today;
-  });
-
   const table = useReactTable({
     data,
     columns,
@@ -97,11 +88,9 @@ export function DataTable<
       <div className="flex items-center py-4 gap-4">
         <Input
           placeholder="Filter Satellite..."
-          value={
-            (table.getColumn("satellite")?.getFilterValue() as string) ?? ""
-          }
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("satellite")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

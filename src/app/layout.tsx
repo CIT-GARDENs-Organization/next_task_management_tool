@@ -1,6 +1,7 @@
 import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import "./globals.css";
+import "leaflet/dist/leaflet.css";
 import RecoilProvider from "@/providers/recoilProvider";
 import {SessionProvider} from "@/providers/sessionProvider";
 import ClientWrapper from "@/components/ClientWrapper";
