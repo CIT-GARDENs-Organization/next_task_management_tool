@@ -34,6 +34,7 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 
 import AddPassScheduleButton from "@/components/AddPassScheduleButton";
+import {useEffect} from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -44,7 +45,12 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([
+    {
+      id: "pass_start_time",
+      desc: false,
+    },
+  ]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -68,6 +74,11 @@ export function DataTable<TData, TValue>({
       columnFilters,
       columnVisibility,
       rowSelection,
+    },
+    initialState: {
+      pagination: {
+        pageSize: 20,
+      },
     },
   });
 
@@ -110,7 +121,6 @@ export function DataTable<TData, TValue>({
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-        <AddPassScheduleButton />
       </div>
       <div className="rounded-md border">
         <Table>

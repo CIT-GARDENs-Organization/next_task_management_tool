@@ -16,7 +16,7 @@ const supabase = createClient();
 
 // データフェッチ用の関数
 const fetcher = async () => {
-  const {data, error} = await supabase.from("pass_schedule").select("*");
+  const {data, error} = await supabase.from("satellite_schedule").select("*");
   if (error) {
     throw new Error(error.message);
   }
@@ -27,7 +27,7 @@ const fetcher = async () => {
 };
 
 export default function Schedule() {
-  const {data, error} = useSWR("pass_schedule", fetcher);
+  const {data, error} = useSWR("satellite_schedule", fetcher);
 
   if (error) return <div>Error loading data...</div>;
   if (!data) return <div>Loading...</div>;

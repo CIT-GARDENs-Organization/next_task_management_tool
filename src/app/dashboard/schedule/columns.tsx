@@ -17,8 +17,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+// 日付フォーマット関数
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleString();
+};
+
 export const columns: ColumnDef<
-  Database["public"]["Tables"]["pass_schedule"]["Row"]
+  Database["public"]["Tables"]["satellite_schedule"]["Row"]
 >[] = [
   {
     id: "select",
@@ -43,21 +49,12 @@ export const columns: ColumnDef<
     enableHiding: false,
   },
   {
-    accessorKey: "pass_id",
-    header: "Pass-ID",
-    cell: ({row}) => (
-      <div className="capitalize">{row.getValue("pass_id")}</div>
-    ),
-  },
-  {
-    accessorKey: "satellite_name",
+    accessorKey: "name",
     header: "Satellite",
-    cell: ({row}) => (
-      <div className="capitalize">{row.getValue("satellite_name")}</div>
-    ),
+    cell: ({row}) => <div className="capitalize">{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "start_time",
+    accessorKey: "pass_start_time",
     header: ({column}) => {
       return (
         <Button
@@ -70,8 +67,72 @@ export const columns: ColumnDef<
       );
     },
     cell: ({row}) => (
-      <div className="lowercase">{row.getValue("start_time")}</div>
+      <div className="lowercase">
+        {formatDate(row.getValue("pass_start_time"))}
+      </div>
     ),
+  },
+  {
+    accessorKey: "pass_end_time",
+    header: "End Time",
+    cell: ({row}) => (
+      <div className="lowercase">
+        {formatDate(row.getValue("pass_end_time"))}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "duration",
+    header: "Duration",
+    // row.getValue("pass_end_time") - row.getValue("pass_start_time") でfloat型の分数取得
+    cell: ({row}) => {
+      const start = new Date(row.getValue("pass_start_time")).getTime();
+      const end = new Date(row.getValue("pass_end_time")).getTime();
+      const duration = (end - start) / 1000 / 60;
+      return <div>{duration.toFixed(2)} min</div>;
+    },
+  },
+  {
+    accessorKey: "max_elevation",
+    header: "Max Elevation",
+    cell: ({row}) => (
+      <div>{(row.getValue("max_elevation") as number).toFixed(2)}°</div>
+    ),
+  },
+  {
+    accessorKey: "azimuth_start",
+    header: "Azimuth Start",
+    cell: ({row}) => (
+      <div>{(row.getValue("azimuth_start") as number).toFixed(2)}°</div>
+    ),
+  },
+  {
+    accessorKey: "azimuth_end",
+    header: "Azimuth End",
+    cell: ({row}) => (
+      <div>{(row.getValue("azimuth_end") as number).toFixed(2)}°</div>
+    ),
+  },
+  {
+    accessorKey: "updates_count",
+    header: "Updates",
+    cell: ({row}) => <div>{row.getValue("updates_count")}</div>,
+  },
+  {
+    accessorKey: "tle_updated_at",
+    header: "Status",
+    //もしtle_updated_atが1日以上前ならば"Outdated"、そうでなければ"Updated"を表示 pass_end_timeが現在時刻より前ならば"Expired"を表示
+    cell: ({row}) => {
+      const tleUpdatedAt = new Date(row.getValue("tle_updated_at")).getTime();
+      const now = new Date().getTime();
+      const passEndTime = new Date(row.getValue("pass_end_time")).getTime();
+      const oneDay = 1000 * 60 * 60 * 24;
+      const isOutdated = now - tleUpdatedAt > oneDay;
+      const isExpired = now > passEndTime;
+      return (
+        <div>{isExpired ? "Expired" : isOutdated ? "Outdated" : "Updated"}</div>
+      );
+    },
   },
   {
     id: "actions",
@@ -88,7 +149,6 @@ export const columns: ColumnDef<
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>変更する</DropdownMenuItem>
             <DropdownMenuItem>削除</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
