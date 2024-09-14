@@ -2,14 +2,9 @@ import {TableRow, TableCell} from "@/components/ui/table";
 
 import {flexRender} from "@tanstack/react-table";
 
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import {Sheet, SheetTrigger} from "@/components/ui/sheet";
+
+import {RowSheetContent} from "@/components/RowSheetContent";
 
 interface ShadcnTableRowWithSheetProps {
   row: any;
@@ -32,15 +27,7 @@ export default function ShadcnTableRowWithSheet({
           ))}
         </TableRow>
       </SheetTrigger>
-      <SheetContent className="w-[400px] sm:w-2/3 sm:max-w-screen-lg">
-        <SheetHeader>
-          <SheetTitle>Row Details</SheetTitle>
-          <SheetDescription>
-            {/* Display row-specific details here */}
-            {JSON.stringify(row.original, null, 2)}
-          </SheetDescription>
-        </SheetHeader>
-      </SheetContent>
+      <RowSheetContent row={row} />
     </Sheet>
   );
 }
