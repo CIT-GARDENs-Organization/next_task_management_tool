@@ -8,6 +8,7 @@ import {
   LineChart,
   SquareChartGantt,
   FilePlus2,
+  User,
   LogOut,
 } from "lucide-react";
 import React from "react";
@@ -78,27 +79,19 @@ export default function NavigationBar({
           </div>
         </Link>
 
-        <Link href="/dashboard/add">
+        <Link href="/dashboard/schedule">
           <div className="relative flex items-center mt-6 justify-start hover:text-neutral-500 group">
             <FilePlus2 size={24} />
-            {isWide && <span className="ml-4 font-bold">データの追加</span>}
-            {!isWide && <span className="tooltip left-14">データの追加</span>}
+            {isWide && <span className="ml-4 font-bold">パス計画作成</span>}
+            {!isWide && <span className="tooltip left-14">パス計画作成</span>}
           </div>
         </Link>
 
-        <Link href="/dashboard/analysis">
+        <Link href="/dashboard/user">
           <div className="relative flex items-center mt-6 justify-start hover:text-neutral-500 group">
-            <LineChart size={24} />
-            {isWide && <span className="ml-4 font-bold">解析結果</span>}
-            {!isWide && <span className="tooltip left-14">解析結果</span>}
-          </div>
-        </Link>
-
-        <Link href="/dashboard/data">
-          <div className="relative flex items-center mt-6 justify-start hover:text-neutral-500 group">
-            <SquareChartGantt size={24} />
-            {isWide && <span className="ml-4 font-bold">全データ一覧</span>}
-            {!isWide && <span className="tooltip left-14">全データ一覧</span>}
+            <User size={24} />
+            {isWide && <span className="ml-4 font-bold">ユーザー</span>}
+            {!isWide && <span className="tooltip left-14">ユーザー</span>}
           </div>
         </Link>
 
