@@ -76,7 +76,7 @@ const OperationSettings = ({
           );
         }
       } catch (error) {
-        console.error("初期設定の取得中にエラーが発生しました。", error);
+        console.error("初期設定の取得中にエラーが発生しました", error);
       }
     };
 
@@ -121,7 +121,7 @@ const OperationSettings = ({
       setCommandInput(new Array(11).fill("")); // フォームをリセット
       setCommandDescription(""); // 説明をリセット
     } else {
-      alert("すべてのフィールドに16進数の2桁の値を入力してください。");
+      alert("すべてのフィールドに16進数の2桁の値を入力してください");
     }
   };
 
@@ -178,7 +178,7 @@ const OperationSettings = ({
         alert("設定が保存されました！");
       }
     } catch (error) {
-      alert("設定の保存中にエラーが発生しました。");
+      alert("設定の保存中にエラーが発生しました");
     }
   };
 
@@ -311,13 +311,13 @@ const OperationSettings = ({
         )}
         {operationStatus === "doNotOperate" && (
           <>
-            <p>このパスは運用しない設定です。</p>
-            <p>切り替えるにはボタンを押してください。</p>
+            <p>このパスは運用しない設定です</p>
+            <p>切り替えるにはボタンを押してください</p>
           </>
         )}
         {operationStatus === "unset" && (
           <>
-            <p>運用するかどうかを選択してください。</p>
+            <p>運用するかどうかを選択してください</p>
           </>
         )}
       </div>

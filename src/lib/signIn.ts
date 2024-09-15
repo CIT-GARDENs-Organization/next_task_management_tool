@@ -31,7 +31,7 @@ export async function signIn(formData: FormData): Promise<SignInResponse> {
     return {
       supabase: {
         success: false,
-        message: "ログインに失敗しました。" + error.message,
+        message: "ログインに失敗しました" + error.message,
       },
     };
   }
@@ -41,7 +41,7 @@ export async function signIn(formData: FormData): Promise<SignInResponse> {
   return {
     supabase: {
       success: true,
-      message: "ログインに成功しました。",
+      message: "ログインに成功しました",
       session,
     },
   };

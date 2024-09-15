@@ -27,7 +27,7 @@ export default function Login() {
     const result = await signIn(formData);
 
     if (!result.supabase?.success) {
-      setError(result.supabase?.message || "ログインに失敗しました。");
+      setError(result.supabase?.message || "ログインに失敗しました");
     } else {
       // ログイン成功後にセッションを更新
       const sessionData = result.supabase?.session;

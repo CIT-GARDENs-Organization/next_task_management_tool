@@ -21,8 +21,8 @@ export function createClient() {
               cookieStore.set(name, value, options)
             );
           } catch {
-            // setAll メソッドがサーバーコンポーネントから呼び出されました。
-            // ミドルウェアがユーザーセッションを更新している場合、これは無視できます。
+            // setAll メソッドがサーバーコンポーネントから呼び出されました
+            // ミドルウェアがユーザーセッションを更新している場合、これは無視できます
           }
         },
       },
