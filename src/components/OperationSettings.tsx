@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import useSWR from "swr";
 import {Button} from "@/components/ui/button";
 import {Separator} from "@/components/ui/separator";
@@ -47,6 +47,41 @@ const OperationSettings = ({
   );
   const [commandDescription, setCommandDescription] = useState<string>(""); // コマンドの説明
   const {data: userDetails, error} = useSWR("user_details", fetcher); // SWRでユーザーリストを取得
+
+  // 初期設定を取得する
+  useEffect(() => {
+    const fetchInitialSettings = async () => {
+      try {
+        const {data, error} = await supabase
+          .from("operation")
+          .select("*")
+          .eq("satellite_schedule_id", satelliteScheduleId)
+          .single(); // Fetch a single row
+
+        if (error && error.code !== "PGRST116") {
+          // Ignore no row found error
+          throw error;
+        }
+
+        if (data) {
+          // 既存のエントリが存在する場合、それを初期設定に使用
+          setOperationStatus((data.status as OperationStatus) || "unset");
+          setOperators((data.operators as string[]) || []);
+          setCommands(
+            (data.commands as {
+              order: number;
+              command: string[];
+              description: string;
+            }[]) || []
+          );
+        }
+      } catch (error) {
+        console.error("初期設定の取得中にエラーが発生しました。", error);
+      }
+    };
+
+    fetchInitialSettings();
+  }, [satelliteScheduleId]); // satelliteScheduleIdが変わったら再度フェッチ
 
   const handleStatusChange = (status: OperationStatus) => {
     setOperationStatus(status);
