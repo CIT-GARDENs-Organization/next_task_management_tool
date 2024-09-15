@@ -10,6 +10,7 @@ import {LatLngExpression} from "leaflet";
 import OrbitMap from "./OrbitMap";
 import SatelliteDetails from "@/components/SatelliteDetails";
 import {calculateOrbitSegments} from "@/lib/calculateOrbitForMap";
+import OperationSettings from "@/components/OperationSettings";
 
 const supabase = createClient();
 
@@ -83,6 +84,11 @@ export function RowSheetContent({row}: RowSheetContentProps) {
               />
             )}
           </div>
+          <OperationSettings
+            onStatusChange={(status) =>
+              console.log("Status changed to:", status)
+            }
+          />
         </SheetDescription>
       </SheetHeader>
     </SheetContent>
