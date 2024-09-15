@@ -7,6 +7,7 @@ import {useState} from "react";
 import {useRouter} from "next/navigation";
 import {signIn} from "@/lib/signIn";
 import {useSession} from "@/providers/sessionProvider";
+import Link from "next/link";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -78,6 +79,13 @@ export default function Login() {
           </label>
 
           {error && <p className="text-red-500">{error}</p>}
+
+          <Link
+            href="/signup"
+            className="text-sm text-blue-500 hover:underline"
+          >
+            新しいアカウントを作成するにはこちら
+          </Link>
 
           <Button type="submit" className="mt-4">
             Sign In
