@@ -17,6 +17,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import {Badge} from "@/components/ui/badge";
+
 // 日付フォーマット関数
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
@@ -130,7 +132,13 @@ export const columns: ColumnDef<
       const isOutdated = now - tleUpdatedAt > oneDay;
       const isExpired = now > passEndTime;
       return (
-        <div>{isExpired ? "Expired" : isOutdated ? "Outdated" : "Updated"}</div>
+        <Badge
+          variant={
+            isExpired ? "destructive" : isOutdated ? "outline" : "secondary"
+          }
+        >
+          {isExpired ? "Expired" : isOutdated ? "Outdated" : "Updated"}
+        </Badge>
       );
     },
   },
