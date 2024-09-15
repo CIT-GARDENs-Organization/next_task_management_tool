@@ -71,6 +71,12 @@ function parseTLE(tle: {line1: string; line2: string}): ParsedTLE {
     );
   }
 
+  // for B* drag term
+  const valueString = line1.slice(53, 61).trim();
+  const sign = valueString[5] === "-" ? -1 : 1;
+  const mantissa = parseFloat(`0.${valueString.slice(0, 5)}`);
+  const exponent = parseInt(valueString.slice(6), 10);
+
   return {
     line1: {
       lineNumber: parseInt(line1.slice(0, 1)), // Line 1
@@ -83,7 +89,7 @@ function parseTLE(tle: {line1: string; line2: string}): ParsedTLE {
       epochDay: parseFloat(line1.slice(20, 32).trim()), // HHH.HHHHHHHH
       meanMotionFirstDerivative: parseFloat(line1.slice(33, 43).trim()), // +IIIIIIII
       meanMotionSecondDerivative: parseFloat(line1.slice(44, 52).trim()), // +JJJJJ-J
-      bStarDragTerm: parseFloat(line1.slice(53, 61).trim()), // +KKKKK-K
+      bStarDragTerm: mantissa * Math.pow(10, sign * exponent), // +KKKKK-K
       ephemerisType: parseInt(line1.slice(62, 63)), // L
       elementSetNumber: parseInt(line1.slice(64, 68).trim()), // MMMM
       checksum: parseInt(line1.slice(68, 69)), // N
@@ -141,6 +147,9 @@ Deno.serve(async (req) => {
         );
 
         const tleInfo = parseTLE(tle);
+
+        console.log("Parsed TLE:", tleInfo);
+
         const {error} = await supabase.from("parsed_tle").insert([
           {
             id: record.id,
@@ -154,6 +163,8 @@ Deno.serve(async (req) => {
             epoch_day: tleInfo.line1.epochDay,
             mean_motion_first_derivative:
               tleInfo.line1.meanMotionFirstDerivative,
+            mean_motion_second_derivative:
+              tleInfo.line1.meanMotionSecondDerivative,
             b_star_drag_term: tleInfo.line1.bStarDragTerm,
             ephemeris_type: tleInfo.line1.ephemerisType,
             element_set_number: tleInfo.line1.elementSetNumber,

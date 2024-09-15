@@ -49,6 +49,57 @@ export type Database = {
         }
         Relationships: []
       }
+      operation: {
+        Row: {
+          commands: Json | null
+          create_user_id: string | null
+          created_at: string
+          id: number
+          operators: Json | null
+          results: Json | null
+          satellite_schedule_id: string | null
+          status: string | null
+          update_at: string | null
+        }
+        Insert: {
+          commands?: Json | null
+          create_user_id?: string | null
+          created_at?: string
+          id?: number
+          operators?: Json | null
+          results?: Json | null
+          satellite_schedule_id?: string | null
+          status?: string | null
+          update_at?: string | null
+        }
+        Update: {
+          commands?: Json | null
+          create_user_id?: string | null
+          created_at?: string
+          id?: number
+          operators?: Json | null
+          results?: Json | null
+          satellite_schedule_id?: string | null
+          status?: string | null
+          update_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operation_create_user_id_fkey"
+            columns: ["create_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operation_satellite_schedule_id_fkey"
+            columns: ["satellite_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "satellite_schedule"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       parsed_tle: {
         Row: {
           b_star_drag_term: number | null
@@ -67,6 +118,7 @@ export type Database = {
           mean_anomaly: number | null
           mean_motion: number | null
           mean_motion_first_derivative: number | null
+          mean_motion_second_derivative: number | null
           name: string | null
           perigee_argument: number | null
           revolution_number: number | null
@@ -90,6 +142,7 @@ export type Database = {
           mean_anomaly?: number | null
           mean_motion?: number | null
           mean_motion_first_derivative?: number | null
+          mean_motion_second_derivative?: number | null
           name?: string | null
           perigee_argument?: number | null
           revolution_number?: number | null
@@ -113,6 +166,7 @@ export type Database = {
           mean_anomaly?: number | null
           mean_motion?: number | null
           mean_motion_first_derivative?: number | null
+          mean_motion_second_derivative?: number | null
           name?: string | null
           perigee_argument?: number | null
           revolution_number?: number | null
@@ -140,41 +194,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "satellite_list"
             referencedColumns: ["id"]
-          },
-        ]
-      }
-      pass_schedule: {
-        Row: {
-          created_at: string
-          end_time: string | null
-          id: string
-          pass_id: number | null
-          satellite_name: string | null
-          start_time: string | null
-        }
-        Insert: {
-          created_at?: string
-          end_time?: string | null
-          id?: string
-          pass_id?: number | null
-          satellite_name?: string | null
-          start_time?: string | null
-        }
-        Update: {
-          created_at?: string
-          end_time?: string | null
-          id?: string
-          pass_id?: number | null
-          satellite_name?: string | null
-          start_time?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pass_schedule_satellite_name_fkey"
-            columns: ["satellite_name"]
-            isOneToOne: false
-            referencedRelation: "satellite_list"
-            referencedColumns: ["name"]
           },
         ]
       }
@@ -212,39 +231,48 @@ export type Database = {
         Row: {
           azimuth_end: number | null
           azimuth_start: number | null
+          country: Json | null
           created_at: string
           id: string
           max_elevation: number | null
           name: string | null
+          operation: string | null
           pass_end_time: string | null
           pass_start_time: string | null
           satellite_id: string | null
+          tle_id: number | null
           tle_updated_at: string | null
           updates_count: number | null
         }
         Insert: {
           azimuth_end?: number | null
           azimuth_start?: number | null
+          country?: Json | null
           created_at?: string
           id?: string
           max_elevation?: number | null
           name?: string | null
+          operation?: string | null
           pass_end_time?: string | null
           pass_start_time?: string | null
           satellite_id?: string | null
+          tle_id?: number | null
           tle_updated_at?: string | null
           updates_count?: number | null
         }
         Update: {
           azimuth_end?: number | null
           azimuth_start?: number | null
+          country?: Json | null
           created_at?: string
           id?: string
           max_elevation?: number | null
           name?: string | null
+          operation?: string | null
           pass_end_time?: string | null
           pass_start_time?: string | null
           satellite_id?: string | null
+          tle_id?: number | null
           tle_updated_at?: string | null
           updates_count?: number | null
         }
@@ -261,6 +289,13 @@ export type Database = {
             columns: ["satellite_id"]
             isOneToOne: false
             referencedRelation: "satellite_list"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "satellite_schedule_tle_id_fkey"
+            columns: ["tle_id"]
+            isOneToOne: false
+            referencedRelation: "tle"
             referencedColumns: ["id"]
           },
         ]
@@ -296,6 +331,41 @@ export type Database = {
             columns: ["satellite_id"]
             isOneToOne: false
             referencedRelation: "satellite_list"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_details: {
+        Row: {
+          auth_id: string | null
+          created_at: string
+          first_name: string | null
+          id: string
+          last_name: string | null
+          unit_no: number | null
+        }
+        Insert: {
+          auth_id?: string | null
+          created_at?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          unit_no?: number | null
+        }
+        Update: {
+          auth_id?: string | null
+          created_at?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          unit_no?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_details_auth_id_fkey"
+            columns: ["auth_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]

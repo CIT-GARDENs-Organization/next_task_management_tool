@@ -1,10 +1,13 @@
-import {createServerClient, type CookieOptions} from "@supabase/ssr";
+import "server-only";
+
+import {Database} from "@/types/supabase";
+import {createServerClient} from "@supabase/ssr";
 import {cookies} from "next/headers";
 
 export function createClient() {
   const cookieStore = cookies();
 
-  return createServerClient(
+  return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -18,7 +21,8 @@ export function createClient() {
               cookieStore.set(name, value, options)
             );
           } catch {
-            // ignore
+            // setAll メソッドがサーバーコンポーネントから呼び出されました
+            // ミドルウェアがユーザーセッションを更新している場合、これは無視できます
           }
         },
       },

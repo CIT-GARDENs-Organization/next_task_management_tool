@@ -1,6 +1,5 @@
 "use client";
 import useSWR from "swr";
-import {createClient} from "@supabase/supabase-js";
 import {
   Card,
   CardContent,
@@ -9,19 +8,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import {Database} from "@/types/supabase";
 import {columns} from "./columns";
 import {DataTable} from "./data-table";
+import {createClient} from "@/utils/supabase/client";
 
-// Supabaseクライアントのセットアップ
-const supabase = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const supabase = createClient();
 
 // データフェッチ用の関数
 const fetcher = async () => {
-  const {data, error} = await supabase.from("pass_schedule").select("*");
+  const {data, error} = await supabase.from("user_details").select("*");
   if (error) {
     throw new Error(error.message);
   }
@@ -32,7 +27,7 @@ const fetcher = async () => {
 };
 
 export default function Schedule() {
-  const {data, error} = useSWR("pass_schedule", fetcher);
+  const {data, error} = useSWR("user_details", fetcher);
 
   if (error) return <div>Error loading data...</div>;
   if (!data) return <div>Loading...</div>;
@@ -42,8 +37,8 @@ export default function Schedule() {
       <div className="max-w-screen-xl w-full mx-auto">
         <Card className="md:col-span-2 w-full">
           <CardHeader>
-            <CardTitle className="text-xl">パス計画の作成</CardTitle>
-            <CardDescription>各パスでの運用計画を作成します</CardDescription>
+            <CardTitle className="text-xl">ユーザーリスト</CardTitle>
+            <CardDescription>ユーザーのリストを表示します</CardDescription>
           </CardHeader>
           <CardContent>
             <DataTable columns={columns} data={data} />
