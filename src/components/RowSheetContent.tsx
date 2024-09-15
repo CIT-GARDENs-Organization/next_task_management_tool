@@ -88,7 +88,10 @@ export function RowSheetContent({row}: RowSheetContentProps) {
               />
             )}
           </div>
-          <OperationSettings onStatusChange={handleStatusChange} />
+          <OperationSettings
+            satelliteScheduleId={row.original.id}
+            onStatusChange={handleStatusChange}
+          />
         </SheetDescription>
       </SheetHeader>
     </SheetContent>

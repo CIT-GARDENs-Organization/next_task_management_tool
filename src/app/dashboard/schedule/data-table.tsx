@@ -36,6 +36,7 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 
 import {Database} from "@/types/supabase";
+import {mutate} from "swr";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -56,7 +57,9 @@ export function DataTable<
     []
   );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+    React.useState<VisibilityState>({
+      id: false,
+    });
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
@@ -82,6 +85,10 @@ export function DataTable<
       },
     },
   });
+
+  const handleDataChange = () => {
+    mutate("your-data-fetch-key");
+  };
 
   return (
     <div>

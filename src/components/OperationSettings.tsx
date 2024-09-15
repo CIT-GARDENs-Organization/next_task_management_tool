@@ -10,12 +10,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {createClient} from "@/utils/supabase/client"; // Supabase クライアントの作成
+import {createClient} from "@/utils/supabase/client";
+import {useSession} from "@/providers/sessionProvider";
 
 type OperationStatus = "unset" | "operate" | "doNotOperate";
 
 interface OperationSettingsProps {
   onStatusChange: (status: OperationStatus) => void;
+  satelliteScheduleId: string;
 }
 
 const supabase = createClient();
@@ -29,14 +31,21 @@ const fetcher = async () => {
   return data;
 };
 
-const OperationSettings = ({onStatusChange}: OperationSettingsProps) => {
+const OperationSettings = ({
+  onStatusChange,
+  satelliteScheduleId,
+}: OperationSettingsProps) => {
+  const {session} = useSession();
   const [operationStatus, setOperationStatus] =
     useState<OperationStatus>("unset");
   const [operators, setOperators] = useState<string[]>([]); // 運用者のIDリストを管理
-  const [commands, setCommands] = useState<string[][]>([]); // コマンドリスト
+  const [commands, setCommands] = useState<
+    {order: number; command: string[]; description: string}[]
+  >([]); // コマンドリスト
   const [commandInput, setCommandInput] = useState<Array<string>>(
     new Array(11).fill("") // 11個の要素に変更
   );
+  const [commandDescription, setCommandDescription] = useState<string>(""); // コマンドの説明
   const {data: userDetails, error} = useSWR("user_details", fetcher); // SWRでユーザーリストを取得
 
   const handleStatusChange = (status: OperationStatus) => {
@@ -52,9 +61,9 @@ const OperationSettings = ({onStatusChange}: OperationSettingsProps) => {
     setOperators(operators.filter((_, i) => i !== index));
   };
 
-  const handleSelectUser = (id: string) => {
-    if (id && !operators.includes(id)) {
-      addOperator(id);
+  const handleSelectUser = (auth_id: string) => {
+    if (auth_id && !operators.includes(auth_id)) {
+      addOperator(auth_id);
     }
   };
 
@@ -66,8 +75,16 @@ const OperationSettings = ({onStatusChange}: OperationSettingsProps) => {
 
   const handleAddCommand = () => {
     if (commandInput.every((c) => /^[0-9A-F]{2}$/.test(c))) {
-      setCommands([...commands, commandInput]);
+      setCommands([
+        ...commands,
+        {
+          order: commands.length + 1,
+          command: commandInput,
+          description: commandDescription || "No description",
+        },
+      ]);
       setCommandInput(new Array(11).fill("")); // フォームをリセット
+      setCommandDescription(""); // 説明をリセット
     } else {
       alert("すべてのフィールドに16進数の2桁の値を入力してください。");
     }
@@ -75,6 +92,59 @@ const OperationSettings = ({onStatusChange}: OperationSettingsProps) => {
 
   const removeCommand = (index: number) => {
     setCommands(commands.filter((_, i) => i !== index));
+  };
+
+  // DBに保存する関数
+  const saveOperationSettings = async () => {
+    try {
+      // Check if an entry with the given satellite_schedule_id already exists
+      const {data: existingEntry, error: fetchError} = await supabase
+        .from("operation")
+        .select("*")
+        .eq("satellite_schedule_id", satelliteScheduleId)
+        .single(); // Fetch a single row
+
+      if (fetchError && fetchError.code !== "PGRST116") {
+        // Ignore no row found error
+        throw fetchError;
+      }
+
+      if (existingEntry) {
+        // If the entry exists, update it
+        const {data, error} = await supabase
+          .from("operation")
+          .update({
+            status: operationStatus,
+            operators: operators,
+            commands: commands,
+            update_at: new Date().toISOString(),
+            create_user_id: session?.user.id,
+          })
+          .eq("satellite_schedule_id", satelliteScheduleId);
+
+        if (error) {
+          throw error;
+        }
+        alert("設定が更新されました！");
+      } else {
+        // If no entry exists, insert a new one
+        const {data, error} = await supabase.from("operation").insert({
+          status: operationStatus,
+          operators: operators,
+          commands: commands,
+          update_at: new Date().toISOString(),
+          create_user_id: session?.user.id,
+          satellite_schedule_id: satelliteScheduleId,
+        });
+
+        if (error) {
+          throw error;
+        }
+        alert("設定が保存されました！");
+      }
+    } catch (error) {
+      alert("設定の保存中にエラーが発生しました。");
+    }
   };
 
   if (error) return <div>Error loading user details...</div>;
@@ -119,8 +189,8 @@ const OperationSettings = ({onStatusChange}: OperationSettingsProps) => {
                   <DropdownMenuGroup>
                     {userDetails.map((user) => (
                       <DropdownMenuItem
-                        key={user.id}
-                        onClick={() => handleSelectUser(user.id)}
+                        key={user.auth_id}
+                        onClick={() => handleSelectUser(user.auth_id as string)}
                       >
                         {user.last_name} {user.first_name} ({user.unit_no}号機)
                       </DropdownMenuItem>
@@ -131,7 +201,7 @@ const OperationSettings = ({onStatusChange}: OperationSettingsProps) => {
               <ul>
                 {operators.map((operatorId, index) => {
                   const user = userDetails.find(
-                    (user) => user.id === operatorId
+                    (user) => user.auth_id === operatorId
                   );
                   return (
                     <li
@@ -172,7 +242,14 @@ const OperationSettings = ({onStatusChange}: OperationSettingsProps) => {
                   />
                 ))}
               </div>
-              <Button onClick={handleAddCommand} className="mt-2">
+              <input
+                type="text"
+                value={commandDescription}
+                onChange={(e) => setCommandDescription(e.target.value)}
+                placeholder="コマンドの説明を入力"
+                className="border rounded px-2 py-1 w-full mt-2"
+              />
+              <Button onClick={handleAddCommand} className="mt-4">
                 コマンドを追加
               </Button>
               <ul className="mt-4">
@@ -181,7 +258,10 @@ const OperationSettings = ({onStatusChange}: OperationSettingsProps) => {
                     key={index}
                     className="flex justify-between items-center mt-2"
                   >
-                    <span>{command.join(" ")}</span>
+                    <span>
+                      順序: {command.order}, コマンド:{" "}
+                      {command.command.join(" ")}, 説明: {command.description}
+                    </span>
                     <Button
                       variant="outline"
                       onClick={() => removeCommand(index)}
@@ -205,6 +285,10 @@ const OperationSettings = ({onStatusChange}: OperationSettingsProps) => {
             <p>運用するかどうかを選択してください。</p>
           </>
         )}
+      </div>
+      {/* 変更を反映するボタン */}
+      <div className="mt-8 flex justify-center">
+        <Button onClick={saveOperationSettings}>変更を反映</Button>
       </div>
     </div>
   );
