@@ -75,13 +75,14 @@ const calculateOrbitSegments = (
       let latitude = satellite.degreesLat(positionGd.latitude);
       let longitude = satellite.degreesLong(positionGd.longitude);
 
-      if (longitude < -90) {
-        longitude += 360;
-      } else if (longitude > 270) {
+      // 経度を[-180, 180]の範囲に制限
+      if (longitude > 180) {
         longitude -= 360;
       }
+
       if (currentSegment.length > 0) {
-        const prevLongitude = currentSegment[currentSegment.length - 1][0];
+        const prevLongitude = currentSegment[currentSegment.length - 1][1];
+        // 経度の差が180度以上の場合はセグメントを分割
         if (Math.abs(longitude - prevLongitude) > 180) {
           segments.push(currentSegment);
           currentSegment = [];
@@ -186,8 +187,8 @@ export function RowSheetContent({row}: RowSheetContentProps) {
           <div className="mt-8">
             {(orbitSegments.length > 0 || extendedOrbitSegments.length > 0) && (
               <DynamicMapContainer
-                center={[35, 135]} // Center the map around Japan
-                zoom={3}
+                center={[0, 0]} // Center the map around Japan
+                zoom={1}
                 style={{height: 300, width: "100%"}}
               >
                 <DynamicTileLayer
