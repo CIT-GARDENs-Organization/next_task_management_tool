@@ -7,6 +7,7 @@ import {
   Home,
   LineChart,
   SquareChartGantt,
+  CalendarClock,
   FilePlus2,
   User,
   LogOut,
@@ -84,6 +85,14 @@ export default function NavigationBar({
             <FilePlus2 size={24} />
             {isWide && <span className="ml-4 font-bold">パス計画作成</span>}
             {!isWide && <span className="tooltip left-14">パス計画作成</span>}
+          </div>
+        </Link>
+
+        <Link href="/dashboard/operation">
+          <div className="relative flex items-center mt-6 justify-start hover:text-neutral-500 group">
+            <SquareChartGantt size={24} />
+            {isWide && <span className="ml-4 font-bold">運用</span>}
+            {!isWide && <span className="tooltip left-14">運用</span>}
           </div>
         </Link>
 
