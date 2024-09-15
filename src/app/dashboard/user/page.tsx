@@ -27,7 +27,7 @@ const fetcher = async () => {
 };
 
 export default function Schedule() {
-  const {data, error} = useSWR("satellite_schedule", fetcher);
+  const {data, error} = useSWR("user_details", fetcher);
 
   if (error) return <div>Error loading data...</div>;
   if (!data) return <div>Loading...</div>;
