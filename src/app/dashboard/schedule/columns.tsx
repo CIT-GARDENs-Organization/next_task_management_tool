@@ -9,7 +9,7 @@ import {Button} from "@/components/ui/button";
 import {Checkbox} from "@/components/ui/checkbox";
 
 import {createClient} from "@/utils/supabase/client";
-import {useEffect, useState} from "react";
+import OperationCell from "@/components/OperationCell";
 
 const supabase = createClient();
 
@@ -159,58 +159,8 @@ export const columns: ColumnDef<
   {
     accessorKey: "operations",
     header: "運用",
-    cell: ({row}) => {
-      const [operationStatus, setOperationStatus] = useState<string>("未設定");
-
-      useEffect(() => {
-        const fetchOperationStatus = async () => {
-          const satelliteScheduleId = row.getValue("id");
-          console.log("satelliteScheduleId", satelliteScheduleId);
-          const {data, error} = await supabase
-            .from("operation")
-            .select("status")
-            .eq("satellite_schedule_id", satelliteScheduleId as string)
-            .single();
-
-          if (error) {
-            console.error("Error fetching operation status:", error);
-            setOperationStatus("未設定");
-          } else {
-            if (data) {
-              // Check the status value and set the corresponding text
-              switch (data.status) {
-                case "operate":
-                  setOperationStatus("運用あり");
-                  break;
-                case "doNotOperate":
-                  setOperationStatus("運用しない");
-                  break;
-                case "unset":
-                default:
-                  setOperationStatus("未設定");
-                  break;
-              }
-            } else {
-              setOperationStatus("未設定");
-            }
-          }
-        };
-
-        fetchOperationStatus();
-      }, [row]);
-
-      // 色を変えるためのバリアントを決定
-      const badgeVariant =
-        operationStatus === "運用あり"
-          ? "default"
-          : operationStatus === "運用しない"
-          ? "secondary"
-          : "destructive";
-
-      return <Badge variant={badgeVariant}>{operationStatus}</Badge>;
-    },
+    cell: ({row}) => <OperationCell row={row} />,
   },
-
   {
     id: "actions",
     enableHiding: false,
