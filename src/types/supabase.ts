@@ -49,6 +49,57 @@ export type Database = {
         }
         Relationships: []
       }
+      operation: {
+        Row: {
+          commands: Json | null
+          create_user_id: string | null
+          created_at: string
+          id: number
+          operators: Json | null
+          results: Json | null
+          satellite_schedule_id: string | null
+          status: string | null
+          update_at: string | null
+        }
+        Insert: {
+          commands?: Json | null
+          create_user_id?: string | null
+          created_at?: string
+          id?: number
+          operators?: Json | null
+          results?: Json | null
+          satellite_schedule_id?: string | null
+          status?: string | null
+          update_at?: string | null
+        }
+        Update: {
+          commands?: Json | null
+          create_user_id?: string | null
+          created_at?: string
+          id?: number
+          operators?: Json | null
+          results?: Json | null
+          satellite_schedule_id?: string | null
+          status?: string | null
+          update_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operation_create_user_id_fkey"
+            columns: ["create_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operation_satellite_schedule_id_fkey"
+            columns: ["satellite_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "satellite_schedule"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       parsed_tle: {
         Row: {
           b_star_drag_term: number | null
@@ -146,41 +197,6 @@ export type Database = {
           },
         ]
       }
-      pass_schedule: {
-        Row: {
-          created_at: string
-          end_time: string | null
-          id: string
-          pass_id: number | null
-          satellite_name: string | null
-          start_time: string | null
-        }
-        Insert: {
-          created_at?: string
-          end_time?: string | null
-          id?: string
-          pass_id?: number | null
-          satellite_name?: string | null
-          start_time?: string | null
-        }
-        Update: {
-          created_at?: string
-          end_time?: string | null
-          id?: string
-          pass_id?: number | null
-          satellite_name?: string | null
-          start_time?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pass_schedule_satellite_name_fkey"
-            columns: ["satellite_name"]
-            isOneToOne: false
-            referencedRelation: "satellite_list"
-            referencedColumns: ["name"]
-          },
-        ]
-      }
       satellite_list: {
         Row: {
           created_at: string
@@ -220,6 +236,7 @@ export type Database = {
           id: string
           max_elevation: number | null
           name: string | null
+          operation: string | null
           pass_end_time: string | null
           pass_start_time: string | null
           satellite_id: string | null
@@ -235,6 +252,7 @@ export type Database = {
           id?: string
           max_elevation?: number | null
           name?: string | null
+          operation?: string | null
           pass_end_time?: string | null
           pass_start_time?: string | null
           satellite_id?: string | null
@@ -250,6 +268,7 @@ export type Database = {
           id?: string
           max_elevation?: number | null
           name?: string | null
+          operation?: string | null
           pass_end_time?: string | null
           pass_start_time?: string | null
           satellite_id?: string | null
