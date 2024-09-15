@@ -60,6 +60,10 @@ export function RowSheetContent({row}: RowSheetContentProps) {
     }
   }
 
+  const handleStatusChange = (status: string) => {
+    console.log("Status changed to:", status);
+  };
+
   return (
     <SheetContent className="w-[400px] sm:w-2/3 sm:max-w-screen-lg">
       <SheetHeader>
@@ -84,11 +88,7 @@ export function RowSheetContent({row}: RowSheetContentProps) {
               />
             )}
           </div>
-          <OperationSettings
-            onStatusChange={(status) =>
-              console.log("Status changed to:", status)
-            }
-          />
+          <OperationSettings onStatusChange={handleStatusChange} />
         </SheetDescription>
       </SheetHeader>
     </SheetContent>
