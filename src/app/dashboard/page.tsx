@@ -1,17 +1,10 @@
 "use client";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {useEffect, useState} from "react";
-import useSWR from "swr";
+import {Card, CardContent} from "@/components/ui/card";
 import {useSession} from "@/providers/sessionProvider";
 import {createClient} from "@/utils/supabase/client";
 import {CreateUserDetail} from "@/components/CreateUserDetail";
+import {UserTile} from "@/components/UserTile"; // Import the UserTile component
+import useSWR from "swr";
 
 const supabase = createClient();
 
@@ -39,6 +32,8 @@ export default function Dashboard() {
     fetcher
   );
 
+  console.log(userDetails);
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -55,14 +50,26 @@ export default function Dashboard() {
     return <CreateUserDetail authId={session.user.id} />;
   }
 
+  // Assuming userDetails is an array and we want the first item
+  const user = userDetails?.[0];
+
+  if (!session.user.email) {
+    return <p>User email is not available.</p>;
+  }
+
+  if (!user) {
+    return <p>User details not found.</p>;
+  }
+
   return (
     <main className="bg-neutral-50 w-full p-12 grid grid-cols-1 sm:md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <Card className="w-full">
-        <CardContent className="flex items-center justify-center h-full">
-          <h1>Welcome to your dashboard, {session.user.email}!</h1>
-        </CardContent>
-      </Card>
-      {/* ... other cards ... */}
+      <UserTile
+        lastName={user.last_name || ""}
+        firstName={user.first_name || ""}
+        email={session.user.email}
+        unitNo={user.unit_no || 0}
+      />
+      {/* Add more UserTile components */}
     </main>
   );
 }
