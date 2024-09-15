@@ -316,6 +316,41 @@ export type Database = {
           },
         ]
       }
+      user_details: {
+        Row: {
+          auth_id: string | null
+          created_at: string
+          first_name: string | null
+          id: string
+          last_name: string | null
+          unit_no: number | null
+        }
+        Insert: {
+          auth_id?: string | null
+          created_at?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          unit_no?: number | null
+        }
+        Update: {
+          auth_id?: string | null
+          created_at?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          unit_no?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_details_auth_id_fkey"
+            columns: ["auth_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
