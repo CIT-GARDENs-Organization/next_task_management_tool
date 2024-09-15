@@ -59,6 +59,7 @@ export function DataTable<
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({
       id: false,
+      pass_end_time: false,
     });
   const [rowSelection, setRowSelection] = React.useState({});
 
