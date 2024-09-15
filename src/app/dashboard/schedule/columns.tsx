@@ -52,7 +52,7 @@ export const columns: ColumnDef<
   },
   {
     accessorKey: "name",
-    header: "Satellite",
+    header: "衛星",
     cell: ({row}) => <div className="capitalize">{row.getValue("name")}</div>,
   },
   {
@@ -63,7 +63,7 @@ export const columns: ColumnDef<
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Start Time
+          パス開始時間
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -76,7 +76,7 @@ export const columns: ColumnDef<
   },
   {
     accessorKey: "pass_end_time",
-    header: "End Time",
+    header: "パス終了時間",
     cell: ({row}) => (
       <div className="lowercase">
         {formatDate(row.getValue("pass_end_time"))}
@@ -85,7 +85,7 @@ export const columns: ColumnDef<
   },
   {
     accessorKey: "duration",
-    header: "Duration",
+    header: "継続時間",
     // row.getValue("pass_end_time") - row.getValue("pass_start_time") でfloat型の分数取得
     cell: ({row}) => {
       const start = new Date(row.getValue("pass_start_time")).getTime();
@@ -96,34 +96,33 @@ export const columns: ColumnDef<
   },
   {
     accessorKey: "max_elevation",
-    header: "Max Elevation",
+    header: "最大仰角",
     cell: ({row}) => (
       <div>{(row.getValue("max_elevation") as number).toFixed(2)}°</div>
     ),
   },
   {
     accessorKey: "azimuth_start",
-    header: "Azimuth Start",
+    header: "AOS方位角",
     cell: ({row}) => (
       <div>{(row.getValue("azimuth_start") as number).toFixed(2)}°</div>
     ),
   },
   {
     accessorKey: "azimuth_end",
-    header: "Azimuth End",
+    header: "LOS方位角",
     cell: ({row}) => (
       <div>{(row.getValue("azimuth_end") as number).toFixed(2)}°</div>
     ),
   },
   {
     accessorKey: "updates_count",
-    header: "Updates",
+    header: "更新回数",
     cell: ({row}) => <div>{row.getValue("updates_count")}</div>,
   },
   {
     accessorKey: "tle_updated_at",
-    header: "Status",
-    //もしtle_updated_atが1日以上前ならば"Outdated"、そうでなければ"Updated"を表示 pass_end_timeが現在時刻より前ならば"Expired"を表示
+    header: "計算更新ステータス",
     cell: ({row}) => {
       const tleUpdatedAt = new Date(row.getValue("tle_updated_at")).getTime();
       const now = new Date().getTime();
@@ -137,7 +136,11 @@ export const columns: ColumnDef<
             isExpired ? "destructive" : isOutdated ? "outline" : "secondary"
           }
         >
-          {isExpired ? "Expired" : isOutdated ? "Outdated" : "Updated"}
+          {isExpired
+            ? "終了したパス"
+            : isOutdated
+            ? "無効なパスの可能性"
+            : "正常な計算結果"}
         </Badge>
       );
     },

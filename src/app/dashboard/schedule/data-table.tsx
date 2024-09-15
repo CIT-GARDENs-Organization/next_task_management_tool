@@ -87,7 +87,7 @@ export function DataTable<
     <div>
       <div className="flex items-center py-4 gap-4">
         <Input
-          placeholder="Filter Satellite..."
+          placeholder="衛星名を入力して絞り込み..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
@@ -97,7 +97,7 @@ export function DataTable<
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns
+              表示するカラムを変更
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
