@@ -34,21 +34,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      notes: {
-        Row: {
-          id: number
-          title: string
-        }
-        Insert: {
-          id?: never
-          title: string
-        }
-        Update: {
-          id?: never
-          title?: string
-        }
-        Relationships: []
-      }
       operation: {
         Row: {
           commands: Json | null
