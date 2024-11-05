@@ -42,16 +42,6 @@ export default function Schedule() {
   if (error) return <div>Error loading data...</div>;
   if (!data) return <div>Loading...</div>;
 
-  // dataから今日の日付以降のpass_start_timeを持つデータを抽出
-  const today = new Date();
-  const filteredData = data.filter((row) => {
-    if (!row.pass_start_time) {
-      return false;
-    }
-    const passStartTime = new Date(row.pass_start_time);
-    return passStartTime.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0);
-  });
-
   return (
     <main className="bg-neutral-50 w-full p-12 grid grid-cols-1 gap-8">
       <div className="max-w-screen-xl w-full mx-auto">
@@ -61,7 +51,7 @@ export default function Schedule() {
             <CardDescription>各パスでの運用計画を作成します</CardDescription>
           </CardHeader>
           <CardContent>
-            <DataTable columns={columns} data={filteredData} />
+            <DataTable columns={columns} data={data} />
           </CardContent>
         </Card>
       </div>
