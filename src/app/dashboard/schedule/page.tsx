@@ -16,7 +16,17 @@ const supabase = createClient();
 
 // データフェッチ用の関数
 const fetcher = async () => {
-  const {data, error} = await supabase.from("satellite_schedule").select("*");
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const todayISO = today.toISOString();
+
+  // 今日よりも後の日付のデータを取得
+  const {data, error} = await supabase
+    .from("satellite_schedule")
+    .select("*")
+    .gte("aos", todayISO);
+
   if (error) {
     throw new Error(error.message);
   }
