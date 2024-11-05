@@ -34,16 +34,144 @@ export type Database = {
   }
   public: {
     Tables: {
+      downlink_data: {
+        Row: {
+          created_at: string
+          data: string | null
+          ground_station_id: string | null
+          header: string | null
+          id: string
+          schedule_id: string | null
+          uplink_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          data?: string | null
+          ground_station_id?: string | null
+          header?: string | null
+          id?: string
+          schedule_id?: string | null
+          uplink_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          data?: string | null
+          ground_station_id?: string | null
+          header?: string | null
+          id?: string
+          schedule_id?: string | null
+          uplink_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "downlink_data_ground_station_id_fkey"
+            columns: ["ground_station_id"]
+            isOneToOne: false
+            referencedRelation: "ground_station_data"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "downlink_data_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "satellite_schedule"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "downlink_data_uplink_id_fkey"
+            columns: ["uplink_id"]
+            isOneToOne: false
+            referencedRelation: "uplink_pool"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ground_station_data: {
+        Row: {
+          altitude: number
+          antenna_type: string | null
+          call_sign: string | null
+          country: string
+          gain: number | null
+          id: string
+          latitude: number
+          longitude: number
+          modulation_type: string | null
+          name: string
+          radio_band: string | null
+          region: string
+        }
+        Insert: {
+          altitude: number
+          antenna_type?: string | null
+          call_sign?: string | null
+          country: string
+          gain?: number | null
+          id?: string
+          latitude: number
+          longitude: number
+          modulation_type?: string | null
+          name: string
+          radio_band?: string | null
+          region: string
+        }
+        Update: {
+          altitude?: number
+          antenna_type?: string | null
+          call_sign?: string | null
+          country?: string
+          gain?: number | null
+          id?: string
+          latitude?: number
+          longitude?: number
+          modulation_type?: string | null
+          name?: string
+          radio_band?: string | null
+          region?: string
+        }
+        Relationships: []
+      }
+      in_memory_address: {
+        Row: {
+          created_at: string
+          end_address: number | null
+          id: string
+          satellite_id: string | null
+          start_address: number | null
+        }
+        Insert: {
+          created_at?: string
+          end_address?: number | null
+          id?: string
+          satellite_id?: string | null
+          start_address?: number | null
+        }
+        Update: {
+          created_at?: string
+          end_address?: number | null
+          id?: string
+          satellite_id?: string | null
+          start_address?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "in_memory_address_satellite_id_fkey"
+            columns: ["satellite_id"]
+            isOneToOne: false
+            referencedRelation: "satellite_list"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       operation: {
         Row: {
           commands: Json | null
           create_user_id: string | null
           created_at: string
           id: number
-          operators: Json | null
-          results: Json | null
+          qc1: string | null
+          qc2: string | null
           satellite_schedule_id: string | null
-          status: string | null
           update_at: string | null
         }
         Insert: {
@@ -51,10 +179,9 @@ export type Database = {
           create_user_id?: string | null
           created_at?: string
           id?: number
-          operators?: Json | null
-          results?: Json | null
+          qc1?: string | null
+          qc2?: string | null
           satellite_schedule_id?: string | null
-          status?: string | null
           update_at?: string | null
         }
         Update: {
@@ -62,10 +189,9 @@ export type Database = {
           create_user_id?: string | null
           created_at?: string
           id?: number
-          operators?: Json | null
-          results?: Json | null
+          qc1?: string | null
+          qc2?: string | null
           satellite_schedule_id?: string | null
-          status?: string | null
           update_at?: string | null
         }
         Relationships: [
@@ -212,63 +338,82 @@ export type Database = {
         }
         Relationships: []
       }
+      satellite_radio: {
+        Row: {
+          call_sign: string | null
+          downlink_frequency: number
+          id: string
+          satellite_id: string
+          uplink_frequency: number | null
+        }
+        Insert: {
+          call_sign?: string | null
+          downlink_frequency: number
+          id?: string
+          satellite_id: string
+          uplink_frequency?: number | null
+        }
+        Update: {
+          call_sign?: string | null
+          downlink_frequency?: number
+          id?: string
+          satellite_id?: string
+          uplink_frequency?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "satellite_radio_satellite_id_fkey"
+            columns: ["satellite_id"]
+            isOneToOne: false
+            referencedRelation: "satellite_list"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       satellite_schedule: {
         Row: {
-          azimuth_end: number | null
-          azimuth_start: number | null
+          aos: string | null
+          aos_azimuth: number | null
           country: Json | null
           created_at: string
           id: string
+          los: string | null
+          los_azimuth: number | null
           max_elevation: number | null
-          name: string | null
-          operation: string | null
-          pass_end_time: string | null
-          pass_start_time: string | null
           satellite_id: string | null
           tle_id: number | null
           tle_updated_at: string | null
           updates_count: number | null
         }
         Insert: {
-          azimuth_end?: number | null
-          azimuth_start?: number | null
+          aos?: string | null
+          aos_azimuth?: number | null
           country?: Json | null
           created_at?: string
           id?: string
+          los?: string | null
+          los_azimuth?: number | null
           max_elevation?: number | null
-          name?: string | null
-          operation?: string | null
-          pass_end_time?: string | null
-          pass_start_time?: string | null
           satellite_id?: string | null
           tle_id?: number | null
           tle_updated_at?: string | null
           updates_count?: number | null
         }
         Update: {
-          azimuth_end?: number | null
-          azimuth_start?: number | null
+          aos?: string | null
+          aos_azimuth?: number | null
           country?: Json | null
           created_at?: string
           id?: string
+          los?: string | null
+          los_azimuth?: number | null
           max_elevation?: number | null
-          name?: string | null
-          operation?: string | null
-          pass_end_time?: string | null
-          pass_start_time?: string | null
           satellite_id?: string | null
           tle_id?: number | null
           tle_updated_at?: string | null
           updates_count?: number | null
         }
         Relationships: [
-          {
-            foreignKeyName: "satellite_schedule_name_fkey"
-            columns: ["name"]
-            isOneToOne: false
-            referencedRelation: "satellite_list"
-            referencedColumns: ["name"]
-          },
           {
             foreignKeyName: "satellite_schedule_satellite_id_fkey"
             columns: ["satellite_id"]
@@ -290,29 +435,49 @@ export type Database = {
           content: string | null
           created_at: string
           id: number
-          name: string | null
-          norad_id: number | null
           satellite_id: string | null
         }
         Insert: {
           content?: string | null
           created_at?: string
           id?: number
-          name?: string | null
-          norad_id?: number | null
           satellite_id?: string | null
         }
         Update: {
           content?: string | null
           created_at?: string
           id?: number
-          name?: string | null
-          norad_id?: number | null
           satellite_id?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "tle_satellite_id_fkey"
+            columns: ["satellite_id"]
+            isOneToOne: false
+            referencedRelation: "satellite_list"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      uplink_pool: {
+        Row: {
+          command: string
+          id: string
+          satellite_id: string
+        }
+        Insert: {
+          command: string
+          id?: string
+          satellite_id?: string
+        }
+        Update: {
+          command?: string
+          id?: string
+          satellite_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "uplink_pool_satellite_id_fkey"
             columns: ["satellite_id"]
             isOneToOne: false
             referencedRelation: "satellite_list"
@@ -327,6 +492,7 @@ export type Database = {
           first_name: string | null
           id: string
           last_name: string | null
+          line_id: string | null
           unit_no: number | null
         }
         Insert: {
@@ -335,6 +501,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          line_id?: string | null
           unit_no?: number | null
         }
         Update: {
@@ -343,6 +510,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          line_id?: string | null
           unit_no?: number | null
         }
         Relationships: [
