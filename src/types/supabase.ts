@@ -34,47 +34,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      data_types: {
+        Row: {
+          data_type: string
+          id: string
+          satellite_id: string
+        }
+        Insert: {
+          data_type: string
+          id?: string
+          satellite_id: string
+        }
+        Update: {
+          data_type?: string
+          id?: string
+          satellite_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_types_satellite_id_fkey"
+            columns: ["satellite_id"]
+            isOneToOne: false
+            referencedRelation: "satellites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       downlink_data: {
         Row: {
+          com_sequence_number: string | null
           created_at: string
           data: string | null
-          ground_station_id: string | null
           header: string | null
           id: string
-          schedule_id: string | null
+          pass_id: string | null
           uplink_id: string | null
         }
         Insert: {
+          com_sequence_number?: string | null
           created_at?: string
           data?: string | null
-          ground_station_id?: string | null
           header?: string | null
           id?: string
-          schedule_id?: string | null
+          pass_id?: string | null
           uplink_id?: string | null
         }
         Update: {
+          com_sequence_number?: string | null
           created_at?: string
           data?: string | null
-          ground_station_id?: string | null
           header?: string | null
           id?: string
-          schedule_id?: string | null
+          pass_id?: string | null
           uplink_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "downlink_data_ground_station_id_fkey"
-            columns: ["ground_station_id"]
-            isOneToOne: false
-            referencedRelation: "ground_station_data"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "downlink_data_schedule_id_fkey"
-            columns: ["schedule_id"]
+            columns: ["pass_id"]
             isOneToOne: false
-            referencedRelation: "satellite_schedule"
+            referencedRelation: "passes"
             referencedColumns: ["id"]
           },
           {
@@ -86,48 +105,30 @@ export type Database = {
           },
         ]
       }
-      ground_station_data: {
+      ground_stations: {
         Row: {
           altitude: number
-          antenna_type: string | null
           call_sign: string | null
-          country: string
-          gain: number | null
           id: string
           latitude: number
           longitude: number
-          modulation_type: string | null
           name: string
-          radio_band: string | null
-          region: string
         }
         Insert: {
           altitude: number
-          antenna_type?: string | null
           call_sign?: string | null
-          country: string
-          gain?: number | null
           id?: string
           latitude: number
           longitude: number
-          modulation_type?: string | null
           name: string
-          radio_band?: string | null
-          region: string
         }
         Update: {
           altitude?: number
-          antenna_type?: string | null
           call_sign?: string | null
-          country?: string
-          gain?: number | null
           id?: string
           latitude?: number
           longitude?: number
-          modulation_type?: string | null
           name?: string
-          radio_band?: string | null
-          region?: string
         }
         Relationships: []
       }
@@ -158,20 +159,20 @@ export type Database = {
             foreignKeyName: "in_memory_address_satellite_id_fkey"
             columns: ["satellite_id"]
             isOneToOne: false
-            referencedRelation: "satellite_list"
+            referencedRelation: "satellites"
             referencedColumns: ["id"]
           },
         ]
       }
-      operation: {
+      operations: {
         Row: {
           commands: Json | null
           create_user_id: string | null
           created_at: string
           id: number
+          pass_id: string | null
           qc1: string | null
           qc2: string | null
-          satellite_schedule_id: string | null
           update_at: string | null
         }
         Insert: {
@@ -179,9 +180,9 @@ export type Database = {
           create_user_id?: string | null
           created_at?: string
           id?: number
+          pass_id?: string | null
           qc1?: string | null
           qc2?: string | null
-          satellite_schedule_id?: string | null
           update_at?: string | null
         }
         Update: {
@@ -189,24 +190,17 @@ export type Database = {
           create_user_id?: string | null
           created_at?: string
           id?: number
+          pass_id?: string | null
           qc1?: string | null
           qc2?: string | null
-          satellite_schedule_id?: string | null
           update_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "operation_create_user_id_fkey"
-            columns: ["create_user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "operation_satellite_schedule_id_fkey"
-            columns: ["satellite_schedule_id"]
+            columns: ["pass_id"]
             isOneToOne: false
-            referencedRelation: "satellite_schedule"
+            referencedRelation: "passes"
             referencedColumns: ["id"]
           },
         ]
@@ -230,7 +224,6 @@ export type Database = {
           mean_motion: number | null
           mean_motion_first_derivative: number | null
           mean_motion_second_derivative: number | null
-          name: string | null
           perigee_argument: number | null
           revolution_number: number | null
           right_ascension: number | null
@@ -254,7 +247,6 @@ export type Database = {
           mean_motion?: number | null
           mean_motion_first_derivative?: number | null
           mean_motion_second_derivative?: number | null
-          name?: string | null
           perigee_argument?: number | null
           revolution_number?: number | null
           right_ascension?: number | null
@@ -278,7 +270,6 @@ export type Database = {
           mean_motion?: number | null
           mean_motion_first_derivative?: number | null
           mean_motion_second_derivative?: number | null
-          name?: string | null
           perigee_argument?: number | null
           revolution_number?: number | null
           right_ascension?: number | null
@@ -293,50 +284,86 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "parsed_tle_name_fkey"
-            columns: ["name"]
-            isOneToOne: false
-            referencedRelation: "satellite_list"
-            referencedColumns: ["name"]
-          },
-          {
             foreignKeyName: "parsed_tle_satellite_id_fkey"
             columns: ["satellite_id"]
             isOneToOne: false
-            referencedRelation: "satellite_list"
+            referencedRelation: "satellites"
             referencedColumns: ["id"]
           },
         ]
       }
-      satellite_list: {
+      passes: {
         Row: {
+          aos_azimuth: number | null
+          aos_time: string | null
+          country: Json | null
           created_at: string
+          ground_station_id: string | null
           id: string
-          last_updated: string | null
-          name: string
-          norad_id: number | null
-          status: string | null
-          tle_fetch_on: boolean | null
+          los_azimuth: number | null
+          los_time: string | null
+          max_azimath: number | null
+          max_elevation: number | null
+          satellite_id: string | null
+          tle_id: number | null
+          update_at: string | null
+          updates_count: number | null
         }
         Insert: {
+          aos_azimuth?: number | null
+          aos_time?: string | null
+          country?: Json | null
           created_at?: string
+          ground_station_id?: string | null
           id?: string
-          last_updated?: string | null
-          name: string
-          norad_id?: number | null
-          status?: string | null
-          tle_fetch_on?: boolean | null
+          los_azimuth?: number | null
+          los_time?: string | null
+          max_azimath?: number | null
+          max_elevation?: number | null
+          satellite_id?: string | null
+          tle_id?: number | null
+          update_at?: string | null
+          updates_count?: number | null
         }
         Update: {
+          aos_azimuth?: number | null
+          aos_time?: string | null
+          country?: Json | null
           created_at?: string
+          ground_station_id?: string | null
           id?: string
-          last_updated?: string | null
-          name?: string
-          norad_id?: number | null
-          status?: string | null
-          tle_fetch_on?: boolean | null
+          los_azimuth?: number | null
+          los_time?: string | null
+          max_azimath?: number | null
+          max_elevation?: number | null
+          satellite_id?: string | null
+          tle_id?: number | null
+          update_at?: string | null
+          updates_count?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "passes_ground_staton_id_fkey"
+            columns: ["ground_station_id"]
+            isOneToOne: false
+            referencedRelation: "ground_stations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "satellite_schedule_satellite_id_fkey"
+            columns: ["satellite_id"]
+            isOneToOne: false
+            referencedRelation: "satellites"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "satellite_schedule_tle_id_fkey"
+            columns: ["tle_id"]
+            isOneToOne: false
+            referencedRelation: "tle"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       satellite_radio: {
         Row: {
@@ -365,70 +392,58 @@ export type Database = {
             foreignKeyName: "satellite_radio_satellite_id_fkey"
             columns: ["satellite_id"]
             isOneToOne: false
-            referencedRelation: "satellite_list"
+            referencedRelation: "satellites"
             referencedColumns: ["id"]
           },
         ]
       }
-      satellite_schedule: {
+      satellites: {
         Row: {
-          aos: string | null
-          aos_azimuth: number | null
-          country: Json | null
           created_at: string
           id: string
-          los: string | null
-          los_azimuth: number | null
-          max_elevation: number | null
-          satellite_id: string | null
-          tle_id: number | null
-          tle_updated_at: string | null
-          updates_count: number | null
+          last_updated: string | null
+          name: string
+          norad_id: number | null
+          status: string | null
+          tle_fetch_on: boolean
         }
         Insert: {
-          aos?: string | null
-          aos_azimuth?: number | null
-          country?: Json | null
           created_at?: string
           id?: string
-          los?: string | null
-          los_azimuth?: number | null
-          max_elevation?: number | null
-          satellite_id?: string | null
-          tle_id?: number | null
-          tle_updated_at?: string | null
-          updates_count?: number | null
+          last_updated?: string | null
+          name: string
+          norad_id?: number | null
+          status?: string | null
+          tle_fetch_on?: boolean
         }
         Update: {
-          aos?: string | null
-          aos_azimuth?: number | null
-          country?: Json | null
           created_at?: string
           id?: string
-          los?: string | null
-          los_azimuth?: number | null
-          max_elevation?: number | null
-          satellite_id?: string | null
-          tle_id?: number | null
-          tle_updated_at?: string | null
-          updates_count?: number | null
+          last_updated?: string | null
+          name?: string
+          norad_id?: number | null
+          status?: string | null
+          tle_fetch_on?: boolean
         }
-        Relationships: [
-          {
-            foreignKeyName: "satellite_schedule_satellite_id_fkey"
-            columns: ["satellite_id"]
-            isOneToOne: false
-            referencedRelation: "satellite_list"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "satellite_schedule_tle_id_fkey"
-            columns: ["tle_id"]
-            isOneToOne: false
-            referencedRelation: "tle"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
+      }
+      system_log: {
+        Row: {
+          created_at: string
+          error_code: number | null
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          error_code?: number | null
+          id?: number
+        }
+        Update: {
+          created_at?: string
+          error_code?: number | null
+          id?: number
+        }
+        Relationships: []
       }
       tle: {
         Row: {
@@ -454,7 +469,43 @@ export type Database = {
             foreignKeyName: "tle_satellite_id_fkey"
             columns: ["satellite_id"]
             isOneToOne: false
-            referencedRelation: "satellite_list"
+            referencedRelation: "satellites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      uplink_log: {
+        Row: {
+          id: string
+          satellite_id: string | null
+          transmit_time: string | null
+          uplink_pool_id: string | null
+        }
+        Insert: {
+          id?: string
+          satellite_id?: string | null
+          transmit_time?: string | null
+          uplink_pool_id?: string | null
+        }
+        Update: {
+          id?: string
+          satellite_id?: string | null
+          transmit_time?: string | null
+          uplink_pool_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "uplink_log_satellite_id_fkey"
+            columns: ["satellite_id"]
+            isOneToOne: false
+            referencedRelation: "satellites"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "uplink_log_uplink_pool_id_fkey"
+            columns: ["uplink_pool_id"]
+            isOneToOne: false
+            referencedRelation: "uplink_pool"
             referencedColumns: ["id"]
           },
         ]
@@ -462,63 +513,38 @@ export type Database = {
       uplink_pool: {
         Row: {
           command: string
+          data_type_id: string | null
+          description: string | null
           id: string
-          satellite_id: string
+          satellite_id: string | null
         }
         Insert: {
           command: string
+          data_type_id?: string | null
+          description?: string | null
           id?: string
-          satellite_id?: string
+          satellite_id?: string | null
         }
         Update: {
           command?: string
+          data_type_id?: string | null
+          description?: string | null
           id?: string
-          satellite_id?: string
+          satellite_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "uplink_pool_data_type_id_fkey"
+            columns: ["data_type_id"]
+            isOneToOne: false
+            referencedRelation: "data_types"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "uplink_pool_satellite_id_fkey"
             columns: ["satellite_id"]
             isOneToOne: false
-            referencedRelation: "satellite_list"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_details: {
-        Row: {
-          auth_id: string | null
-          created_at: string
-          first_name: string | null
-          id: string
-          last_name: string | null
-          line_id: string | null
-          unit_no: number | null
-        }
-        Insert: {
-          auth_id?: string | null
-          created_at?: string
-          first_name?: string | null
-          id?: string
-          last_name?: string | null
-          line_id?: string | null
-          unit_no?: number | null
-        }
-        Update: {
-          auth_id?: string | null
-          created_at?: string
-          first_name?: string | null
-          id?: string
-          last_name?: string | null
-          line_id?: string | null
-          unit_no?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_details_auth_id_fkey"
-            columns: ["auth_id"]
-            isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "satellites"
             referencedColumns: ["id"]
           },
         ]
@@ -619,5 +645,20 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
