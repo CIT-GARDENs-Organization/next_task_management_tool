@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
 
     // satellite_listテーブルから衛星リストを取得
     const {data: satellite_list_data, error: satellite_list_error} =
-      await supabase.from("satellite_list").select("*");
+      await supabase.from("satellites").select(" * ");
 
     if (satellite_list_error) {
       return new Response(
@@ -46,13 +46,15 @@ Deno.serve(async (req) => {
         );
 
         console.log("TLE Fetch Response", {
-          status: response.status,
+          status: response,
         });
+
+        const responseText = await response.text();
+        console.log("TLE Data Fetched", responseText);
 
         // responseがOKの場合
         if (response.ok) {
           // response.text()がNo GP data foundの場合
-          const responseText = await response.text();
           if (responseText.includes("No GP data found")) {
             status = "Vanished";
           } else {
@@ -61,7 +63,7 @@ Deno.serve(async (req) => {
 
           // satellite_listテーブルを更新
           const {data: update_data, error: update_error} = await supabase
-            .from("satellite_list")
+            .from("satellites")
             .update({
               last_updated: new Date(),
               status: status,
@@ -83,8 +85,6 @@ Deno.serve(async (req) => {
           // tleテーブルにデータを追加
           const {data, error} = await supabase.from("tle").insert([
             {
-              norad_id: satellite.norad_id,
-              name: satellite.name,
               content: responseText,
               satellite_id: satellite.id,
             },

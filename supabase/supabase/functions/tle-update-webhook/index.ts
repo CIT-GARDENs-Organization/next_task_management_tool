@@ -119,9 +119,7 @@ Deno.serve(async (req) => {
 
   // 各要素をconsoleに出力
   console.log("ID:", record.id);
-  console.log("Name:", record.name);
   console.log("Content:", record.content);
-  console.log("NORAD ID:", record.norad_id);
   console.log("Created At:", record.created_at);
   console.log("Satellite ID:", record.satellite_id);
 
@@ -154,7 +152,6 @@ Deno.serve(async (req) => {
           {
             id: record.id,
             satellite_id: record.satellite_id,
-            name: record.name,
             classification: tleInfo.line1.classification,
             launch_year: tleInfo.line1.launchYear,
             launch_number: tleInfo.line1.launchNumber,
