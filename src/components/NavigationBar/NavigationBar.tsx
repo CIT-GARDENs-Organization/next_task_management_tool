@@ -5,13 +5,13 @@ import {useRouter} from "next/navigation";
 import {
   Settings,
   Home,
-  LineChart,
   SquareChartGantt,
-  CalendarClock,
   FilePlus2,
   User,
   LogOut,
+  Telescope,
 } from "lucide-react";
+import NavigationItem from "@/components/NavigationBar/NavigationItem";
 import React from "react";
 import {useSession} from "@/providers/sessionProvider";
 import {createClient} from "@/utils/supabase/client";
@@ -72,37 +72,41 @@ export default function NavigationBar({
             className="mt-4"
           />
         </Link>
-        <Link href="/">
-          <div className="relative flex items-center mt-8 justify-start hover:text-neutral-500 group">
-            <Home size={24} />
-            {isWide && <span className="ml-4 font-bold">ホーム</span>}
-            {!isWide && <span className="tooltip left-14">ホーム</span>}
-          </div>
-        </Link>
 
-        <Link href="/dashboard/schedule">
-          <div className="relative flex items-center mt-6 justify-start hover:text-neutral-500 group">
-            <FilePlus2 size={24} />
-            {isWide && <span className="ml-4 font-bold">パス計画作成</span>}
-            {!isWide && <span className="tooltip left-14">パス計画作成</span>}
-          </div>
-        </Link>
+        <NavigationItem
+          href="/"
+          icon={<Home size={24} />}
+          label="ホーム"
+          isWide={isWide}
+        />
 
-        <Link href="/dashboard/operation">
-          <div className="relative flex items-center mt-6 justify-start hover:text-neutral-500 group">
-            <SquareChartGantt size={24} />
-            {isWide && <span className="ml-4 font-bold">運用</span>}
-            {!isWide && <span className="tooltip left-14">運用</span>}
-          </div>
-        </Link>
+        <NavigationItem
+          href="/dashboard/schedule"
+          icon={<FilePlus2 size={24} />}
+          label="パス計画作成"
+          isWide={isWide}
+        />
 
-        <Link href="/dashboard/user">
-          <div className="relative flex items-center mt-6 justify-start hover:text-neutral-500 group">
-            <User size={24} />
-            {isWide && <span className="ml-4 font-bold">ユーザー</span>}
-            {!isWide && <span className="tooltip left-14">ユーザー</span>}
-          </div>
-        </Link>
+        <NavigationItem
+          href="/dashboard/operation"
+          icon={<SquareChartGantt size={24} />}
+          label="運用"
+          isWide={isWide}
+        />
+
+        <NavigationItem
+          href="/dashboard/viewer"
+          icon={<Telescope size={24} />}
+          label="ビューア"
+          isWide={isWide}
+        />
+
+        <NavigationItem
+          href="/dashboard/user"
+          icon={<User size={24} />}
+          label="ユーザー"
+          isWide={isWide}
+        />
 
         <div className="flex-grow" />
         <Link href="/dashboard/settings">

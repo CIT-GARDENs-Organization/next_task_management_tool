@@ -1,6 +1,6 @@
 "use client";
 import {useState} from "react";
-import NavigationBar from "@/components/NavigationBar";
+import NavigationBar from "@/components/NavigationBar/NavigationBar";
 import {useSession} from "@/providers/sessionProvider";
 
 export default function ClientWrapper({children}: {children: React.ReactNode}) {
