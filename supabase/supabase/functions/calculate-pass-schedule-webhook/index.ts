@@ -178,7 +178,7 @@ Deno.serve(async (req) => {
 
         // TLEが更新されているか確認
         const {data: existingSchedule, error: fetchError} = await supabase
-          .from("satellite_schedule")
+          .from("passes")
           .select("*")
           .eq("satellite_id", record.satellite_id);
 
@@ -290,19 +290,15 @@ Deno.serve(async (req) => {
                 // 新しいスケジュールを挿入
                 console.log("Inserting new schedule");
                 const {error: insertError} = await supabase
-                  .from("satellite_schedule")
+                  .from("passes")
                   .insert({
                     satellite_id: record.satellite_id,
-                    name: record.name,
-                    pass_start_time: newSchedule.pass_start_time.toISOString(),
-                    pass_end_time: newSchedule.pass_end_time.toISOString(),
+                    aos_time: newSchedule.pass_start_time.toISOString(),
+                    los_time: newSchedule.pass_end_time.toISOString(),
                     max_elevation: newSchedule.max_elevation,
-                    azimuth_start: newSchedule.azimuth_start,
-                    azimuth_end: newSchedule.azimuth_end,
+                    aos_azimuth: newSchedule.azimuth_start,
+                    los_azimuth: newSchedule.azimuth_end,
                     country: newSchedule.countries,
-                    tle_updated_at: tleUpdatedAt
-                      ? tleUpdatedAt.toISOString()
-                      : null, // null チェックを追加
                     updates_count: 0, // 新規作成時は0
                     tle_id: record.id,
                   });
