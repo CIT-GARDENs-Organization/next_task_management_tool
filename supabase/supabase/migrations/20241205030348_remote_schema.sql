@@ -167,10 +167,10 @@ CREATE TABLE IF NOT EXISTS "public"."operations" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "update_at" timestamp with time zone,
     "create_user_id" "uuid",
-    "commands" "jsonb",
     "pass_id" "uuid",
     "qc1" "uuid",
-    "qc2" "uuid"
+    "qc2" "uuid",
+    "commands" "text"[]
 );
 
 
@@ -247,7 +247,7 @@ CREATE TABLE IF NOT EXISTS "public"."passes" (
     "updates_count" bigint,
     "country" "jsonb",
     "tle_id" bigint,
-    "max_azimath" double precision,
+    "max_azimuth" double precision,
     "ground_station_id" "uuid",
     "update_at" timestamp with time zone
 );

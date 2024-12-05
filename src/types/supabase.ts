@@ -166,7 +166,7 @@ export type Database = {
       }
       operations: {
         Row: {
-          commands: Json | null
+          commands: string[] | null
           create_user_id: string | null
           created_at: string
           id: number
@@ -176,7 +176,7 @@ export type Database = {
           update_at: string | null
         }
         Insert: {
-          commands?: Json | null
+          commands?: string[] | null
           create_user_id?: string | null
           created_at?: string
           id?: number
@@ -186,7 +186,7 @@ export type Database = {
           update_at?: string | null
         }
         Update: {
-          commands?: Json | null
+          commands?: string[] | null
           create_user_id?: string | null
           created_at?: string
           id?: number
@@ -302,7 +302,7 @@ export type Database = {
           id: string
           los_azimuth: number | null
           los_time: string | null
-          max_azimath: number | null
+          max_azimuth: number | null
           max_elevation: number | null
           satellite_id: string | null
           tle_id: number | null
@@ -318,7 +318,7 @@ export type Database = {
           id?: string
           los_azimuth?: number | null
           los_time?: string | null
-          max_azimath?: number | null
+          max_azimuth?: number | null
           max_elevation?: number | null
           satellite_id?: string | null
           tle_id?: number | null
@@ -334,7 +334,7 @@ export type Database = {
           id?: string
           los_azimuth?: number | null
           los_time?: string | null
-          max_azimath?: number | null
+          max_azimuth?: number | null
           max_elevation?: number | null
           satellite_id?: string | null
           tle_id?: number | null
