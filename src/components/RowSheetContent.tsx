@@ -28,15 +28,16 @@ const fetcher = async (url: string) => {
 };
 
 export function RowSheetContent({row}: RowSheetContentProps) {
-  const passStartDateTime = new Date(row.original.pass_start_time);
-  const passEndDateTime = new Date(row.original.pass_end_time);
+  const passStartDateTime = new Date(row.original.aos_time);
+  const passEndDateTime = new Date(row.original.los_time);
   const satelliteName = row.original.name;
   const maxElevation = row.original.max_elevation;
-  const azimuthStart = row.original.azimuth_start;
-  const azimuthEnd = row.original.azimuth_end;
+  const azimuthStart = row.original.aos_azimuth;
+  const azimuthEnd = row.original.los_azimuth;
   const countryList = row.original.country.join(", ");
   const updatesCount = row.original.updates_count;
-  const tleUpdatedAt = new Date(row.original.tle_updated_at).toLocaleString();
+
+  console.log("row", row.original);
 
   const tleId = row.original.tle_id;
   const {data} = useSWR(tleId, fetcher);
@@ -67,7 +68,7 @@ export function RowSheetContent({row}: RowSheetContentProps) {
   return (
     <SheetContent className="w-[400px] sm:w-2/3 sm:max-w-screen-lg">
       <SheetHeader>
-        <SheetTitle>{`${satelliteName} ${passStartDateTime.toLocaleString()}`}</SheetTitle>
+        <SheetTitle>{`ISS ${passStartDateTime.toLocaleString()}`}</SheetTitle>
         <SheetDescription>
           <SatelliteDetails
             satelliteName={satelliteName}
@@ -78,7 +79,6 @@ export function RowSheetContent({row}: RowSheetContentProps) {
             azimuthEnd={azimuthEnd}
             countryList={countryList}
             updatesCount={updatesCount}
-            tleUpdatedAt={tleUpdatedAt}
           />
           <div className="mt-8">
             {(orbitSegments.length > 0 || extendedOrbitSegments.length > 0) && (

@@ -23,6 +23,18 @@ const SatelliteDetails = ({
   updatesCount,
   tleUpdatedAt,
 }: SatelliteDetailsProps) => {
+  console.log("Satellite Details Props:", {
+    satelliteName,
+    passStartDateTime,
+    passEndDateTime,
+    maxElevation,
+    azimuthStart,
+    azimuthEnd,
+    countryList,
+    updatesCount,
+    tleUpdatedAt,
+  });
+
   return (
     <div className="flex items-center justify-start">
       <div className="space-y-2">
@@ -36,10 +48,12 @@ const SatelliteDetails = ({
           <strong>Max Elevation:</strong> {maxElevation.toFixed(2)}°
         </div>
         <div>
-          <strong>Azimuth Start:</strong> {azimuthStart.toFixed(2)}°
+          <strong>Azimuth Start:</strong>{" "}
+          {azimuthStart !== undefined ? azimuthStart.toFixed(2) + "°" : "N/A"}°
         </div>
         <div>
-          <strong>Azimuth End:</strong> {azimuthEnd.toFixed(2)}°
+          <strong>Azimuth End:</strong>{" "}
+          {azimuthEnd !== undefined ? azimuthEnd.toFixed(2) + "°" : "N/A"}°
         </div>
         <div>
           <strong>Countries:</strong> {countryList}

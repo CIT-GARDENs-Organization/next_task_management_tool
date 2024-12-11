@@ -229,6 +229,8 @@ Deno.serve(async (req) => {
               newSchedule.azimuth_start !== undefined &&
               newSchedule.azimuth_end !== undefined
             ) {
+              console.log("Existing schedules:", existingSchedule);
+
               // 既存のスケジュールとの比較
               for (const existing of existingSchedule) {
                 const existingPassStartTime = new Date(
@@ -288,7 +290,6 @@ Deno.serve(async (req) => {
                 }
               } else {
                 // 新しいスケジュールを挿入
-                console.log("Inserting new schedule");
                 const {error: insertError} = await supabase
                   .from("passes")
                   .insert({

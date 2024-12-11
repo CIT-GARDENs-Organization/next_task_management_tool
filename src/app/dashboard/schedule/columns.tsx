@@ -62,12 +62,7 @@ export const columns: ColumnDef<
     cell: ({row}) => <div>{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "name",
-    header: "衛星",
-    cell: ({row}) => <div className="capitalize">{row.getValue("name")}</div>,
-  },
-  {
-    accessorKey: "pass_start_time",
+    accessorKey: "aos_time",
     header: ({column}) => {
       return (
         <Button
@@ -80,18 +75,14 @@ export const columns: ColumnDef<
       );
     },
     cell: ({row}) => (
-      <div className="lowercase">
-        {formatDate(row.getValue("pass_start_time"))}
-      </div>
+      <div className="lowercase">{formatDate(row.getValue("aos_time"))}</div>
     ),
   },
   {
-    accessorKey: "pass_end_time",
+    accessorKey: "los_time",
     header: "パス終了時間",
     cell: ({row}) => (
-      <div className="lowercase">
-        {formatDate(row.getValue("pass_end_time"))}
-      </div>
+      <div className="lowercase">{formatDate(row.getValue("los_time"))}</div>
     ),
   },
   {
@@ -99,8 +90,8 @@ export const columns: ColumnDef<
     header: "継続時間",
     // row.getValue("pass_end_time") - row.getValue("pass_start_time") でfloat型の分数取得
     cell: ({row}) => {
-      const start = new Date(row.getValue("pass_start_time")).getTime();
-      const end = new Date(row.getValue("pass_end_time")).getTime();
+      const start = new Date(row.getValue("aos_time")).getTime();
+      const end = new Date(row.getValue("los_time")).getTime();
       const duration = (end - start) / 1000 / 60;
       return <div>{duration.toFixed(2)} min</div>;
     },
@@ -113,48 +104,23 @@ export const columns: ColumnDef<
     ),
   },
   {
-    accessorKey: "azimuth_start",
+    accessorKey: "aos_azimuth",
     header: "AOS方位角",
     cell: ({row}) => (
-      <div>{(row.getValue("azimuth_start") as number).toFixed(2)}°</div>
+      <div>{(row.getValue("aos_azimuth") as number).toFixed(2)}°</div>
     ),
   },
   {
-    accessorKey: "azimuth_end",
+    accessorKey: "los_azimuth",
     header: "LOS方位角",
     cell: ({row}) => (
-      <div>{(row.getValue("azimuth_end") as number).toFixed(2)}°</div>
+      <div>{(row.getValue("los_azimuth") as number).toFixed(2)}°</div>
     ),
   },
   {
     accessorKey: "updates_count",
     header: "更新回数",
     cell: ({row}) => <div>{row.getValue("updates_count")}</div>,
-  },
-  {
-    accessorKey: "tle_updated_at",
-    header: "計算更新ステータス",
-    cell: ({row}) => {
-      const tleUpdatedAt = new Date(row.getValue("tle_updated_at")).getTime();
-      const now = new Date().getTime();
-      const passEndTime = new Date(row.getValue("pass_end_time")).getTime();
-      const oneDay = 1000 * 60 * 60 * 24;
-      const isOutdated = now - tleUpdatedAt > oneDay;
-      const isExpired = now > passEndTime;
-      return (
-        <Badge
-          variant={
-            isExpired ? "destructive" : isOutdated ? "outline" : "secondary"
-          }
-        >
-          {isExpired
-            ? "終了したパス"
-            : isOutdated
-            ? "無効なパスの可能性"
-            : "正常な計算結果"}
-        </Badge>
-      );
-    },
   },
   {
     accessorKey: "operations",

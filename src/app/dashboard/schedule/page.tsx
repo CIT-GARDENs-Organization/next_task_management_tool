@@ -23,9 +23,9 @@ const fetcher = async () => {
 
   // 今日よりも後の日付のデータを取得
   const {data, error} = await supabase
-    .from("satellite_schedule")
+    .from("passes")
     .select("*")
-    .gte("aos", todayISO);
+    .gte("aos_time", todayISO);
 
   if (error) {
     throw new Error(error.message);
@@ -37,7 +37,7 @@ const fetcher = async () => {
 };
 
 export default function Schedule() {
-  const {data, error} = useSWR("satellite_schedule", fetcher);
+  const {data, error} = useSWR("passes", fetcher);
 
   if (error) return <div>Error loading data...</div>;
   if (!data) return <div>Loading...</div>;

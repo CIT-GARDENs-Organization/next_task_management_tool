@@ -49,7 +49,7 @@ export function DataTable<
 >({columns, data}: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([
     {
-      id: "pass_start_time",
+      id: "aos_time",
       desc: false,
     },
   ]);
