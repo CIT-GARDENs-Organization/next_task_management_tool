@@ -51,10 +51,10 @@ export default function Schedule() {
     if (data) {
       const today = new Date();
       const filteredData = data.filter((row) => {
-        if (!row.pass_start_time) {
+        if (!row.aos_time) {
           return false;
         }
-        const passStartTime = new Date(row.pass_start_time);
+        const passStartTime = new Date(row.aos_time);
         return passStartTime.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0);
       });
 

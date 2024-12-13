@@ -56,7 +56,7 @@ async function calculatePassScheduleWithCountries(
   };
 
   const startTime = new Date();
-  const endTime = new Date(startTime.getTime() + 14 * 24 * 60 * 60 * 1000); // 1日後
+  const endTime = new Date(startTime.getTime() + 7 * 24 * 60 * 60 * 1000); // 7日後
 
   const passes = [];
   let time = startTime;
@@ -107,11 +107,11 @@ async function calculatePassScheduleWithCountries(
         await Promise.all(countryFetchPromises);
 
         passes.push({
-          pass_start_time: currentPassStartTime,
-          pass_end_time: time,
+          aos_time: currentPassStartTime,
+          los_time: time,
           max_elevation: maxElevation,
-          azimuth_start: startAzimuth,
-          azimuth_end: azimuth,
+          aos_azimuth: startAzimuth,
+          los_azimuth: azimuth,
           countries: Array.from(countries),
         });
         countries.clear();
@@ -223,35 +223,46 @@ Deno.serve(async (req) => {
 
             // newScheduleの各要素がnullでないかチェック
             if (
-              newSchedule.pass_start_time &&
-              newSchedule.pass_end_time &&
+              newSchedule.aos_time &&
+              newSchedule.los_time &&
               newSchedule.max_elevation !== undefined &&
-              newSchedule.azimuth_start !== undefined &&
-              newSchedule.azimuth_end !== undefined
+              newSchedule.aos_azimuth !== undefined &&
+              newSchedule.los_azimuth !== undefined
             ) {
-              console.log("Existing schedules:", existingSchedule);
-
               // 既存のスケジュールとの比較
               for (const existing of existingSchedule) {
-                const existingPassStartTime = new Date(
-                  existing.pass_start_time
-                );
-                const existingPassEndTime = new Date(existing.pass_end_time);
+                const existingPassStartTime = new Date(existing.aos_time);
+                const existingPassEndTime = new Date(existing.los_time);
 
                 // 通過開始時間か終了時間が±30分以内なら同じスケジュールとみなす
                 const startDiff = calculateTimeDifferenceInMinutes(
                   existingPassStartTime,
-                  newSchedule.pass_start_time
+                  newSchedule.aos_time
                 );
                 const endDiff = calculateTimeDifferenceInMinutes(
                   existingPassEndTime,
-                  newSchedule.pass_start_time
+                  newSchedule.aos_time
                 );
 
                 if (startDiff <= 30 || endDiff <= 30) {
                   scheduleToUpdate = existing;
-                  console.log("scheduleToUpdate = existing");
+                  console.log(
+                    "scheduleToUpdate = existing",
+                    startDiff,
+                    endDiff,
+                    existingPassStartTime,
+                    newSchedule.aos_time
+                  );
                   break;
+                } else {
+                  console.log("No matching schedule found");
+                  console.log(
+                    "scheduleToUpdate = existing",
+                    startDiff,
+                    endDiff,
+                    existingPassStartTime,
+                    newSchedule.aos_time
+                  );
                 }
               }
 
@@ -261,18 +272,15 @@ Deno.serve(async (req) => {
                   `Updating existing schedule: ${scheduleToUpdate.id}`
                 );
                 const {error: updateError} = await supabase
-                  .from("satellite_schedule")
+                  .from("passes")
                   .update({
-                    pass_start_time: newSchedule.pass_start_time.toISOString(),
-                    pass_end_time: newSchedule.pass_end_time.toISOString(),
+                    aos_time: newSchedule.aos_time.toISOString(),
+                    los_time: newSchedule.los_time.toISOString(),
                     max_elevation: newSchedule.max_elevation,
-                    azimuth_start: newSchedule.azimuth_start,
-                    azimuth_end: newSchedule.azimuth_end,
+                    aos_azimuth: newSchedule.aos_azimuth,
+                    los_azimuth: newSchedule.los_azimuth,
                     country: newSchedule.countries,
-                    tle_updated_at: tleUpdatedAt
-                      ? tleUpdatedAt.toISOString()
-                      : null, // null チェックを追加
-                    updates_count: (scheduleToUpdate.updates_count || 0) + 1, // 更新回数を1増やす
+                    updates_count: (scheduleToUpdate.updates_count || 0) + 1,
                     tle_id: record.id,
                   })
                   .eq("id", scheduleToUpdate.id);
@@ -294,11 +302,11 @@ Deno.serve(async (req) => {
                   .from("passes")
                   .insert({
                     satellite_id: record.satellite_id,
-                    aos_time: newSchedule.pass_start_time.toISOString(),
-                    los_time: newSchedule.pass_end_time.toISOString(),
+                    aos_time: newSchedule.aos_time.toISOString(),
+                    los_time: newSchedule.los_time.toISOString(),
                     max_elevation: newSchedule.max_elevation,
-                    aos_azimuth: newSchedule.azimuth_start,
-                    los_azimuth: newSchedule.azimuth_end,
+                    aos_azimuth: newSchedule.aos_azimuth,
+                    los_azimuth: newSchedule.los_azimuth,
                     country: newSchedule.countries,
                     updates_count: 0, // 新規作成時は0
                     tle_id: record.id,

@@ -88,7 +88,7 @@ export const columns: ColumnDef<
   {
     accessorKey: "duration",
     header: "継続時間",
-    // row.getValue("pass_end_time") - row.getValue("pass_start_time") でfloat型の分数取得
+    // row.getValue("los_time") - row.getValue("aos_time") でfloat型の分数取得
     cell: ({row}) => {
       const start = new Date(row.getValue("aos_time")).getTime();
       const end = new Date(row.getValue("los_time")).getTime();

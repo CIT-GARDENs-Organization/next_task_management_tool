@@ -49,7 +49,7 @@ export function DataTable<
 >({columns, data}: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([
     {
-      id: "pass_start_time",
+      id: "aos_time",
       desc: false,
     },
   ]);
@@ -59,7 +59,7 @@ export function DataTable<
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({
       id: false,
-      pass_end_time: false,
+      los_time: false,
     });
   const [rowSelection, setRowSelection] = React.useState({});
 
